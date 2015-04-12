@@ -1,7 +1,7 @@
-NMDatePicker - Custom Date Picker for OS X
-===========================================
+NMDatePicker: Custom Date Picker for OS X
+=========================================
 
-A NSDatePicker replacement allowing for font size and colours customisation.
+A NSDatePicker replacement allowing for appearance customisation.
 
 ## Preview
 ![NMDatePicker preview](http://netmedia.home.pl/github/nmdatepicker/nmdatepicker-preview.png)
