@@ -22,14 +22,15 @@ NSDatePicker replacement allowing for appearance customisation.
 ## Delegate Methods
 ```swift
 /* 
-This method notifies about the date selected in date picker.
+This method notifies about the date selected in the date picker.
 */
 func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate)   
 ```
 
 ```swift
 /*
-Optional method that allows to adjust date picker height when the number of rows is changing between months:    
+Optional method that allows to adjust date picker height   
+when the number of rows is changing between months.    
 */
 func nmDatePicker(datePicker: NMDatePicker, newSize: NSSize) 
 ```
