@@ -20,6 +20,7 @@ NSDatePicker replacement allowing for appearance customisation.
 - Swift 1.2 or later
 
 ## Delegate Methods
+```swift
 /* 
 This method notifies about the date selected in date picker.
 */
