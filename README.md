@@ -20,17 +20,17 @@ NSDatePicker replacement allowing for appearance customisation.
 - Swift 1.2 or later
 
 ## Delegate Methods
-1. Swift
-func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate)   
+Swift  
+    func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate)   
 
-// Optional method that allows to adjust date picker height when the number of rows is changing between months  
-func nmDatePicker(datePicker: NMDatePicker, newSize: NSSize) 
+    Optional method that allows to adjust date picker height when the number of rows is changing between months  
+    func nmDatePicker(datePicker: NMDatePicker, newSize: NSSize) 
 
-2. Objective-C
-- (void)nmDatePicker:(NMDatePicker \*)datePicker newSize:(NSSize)newSize;
+Objective-C  
+    \- (void)nmDatePicker:(NMDatePicker \*)datePicker newSize:(NSSize)newSize;
 
-// Optional method that allows to adjust date picker height when the number of rows is changing between months  
-- (void)nmDatePicker:(NMDatePicker \*)datePicker selectedDate:(NSDate \*)selectedDate;
+    Optional method that allows to adjust date picker height when the number of rows is changing between months  
+    \- (void)nmDatePicker:(NMDatePicker \*)datePicker selectedDate:(NSDate \*)selectedDate;
 
 ## Demo Apps
 NMDate Picker can be used from both Swifth and Objective-C code. See demo apps:
