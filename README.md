@@ -38,7 +38,7 @@ You can use analogous methods in Objective-C code.
 
 
 ## Demo Apps
-NMDate Picker can be used from both Swifth and Objective-C code. See demo apps:
+NMDate Picker can be used from both Swift and Objective-C code. See demo apps:
 - TestApp1: example Swift application containing NMDatePicker view created in code.
 - TestApp2: example Swift application containing NMDatePicker view created in Interface Builder.
 - TestApp3: example Objective-C application containing NMDatePicker view created in code.
