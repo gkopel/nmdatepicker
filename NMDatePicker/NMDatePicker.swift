@@ -55,9 +55,10 @@ class NMDatePicker: NSView {
 
     
     func configurePicker() {
+        self.calendar.firstWeekday = self.firstDayOfWeek
+        self.firstDayComponents = self.firstDayOfMonthForDate(dateValue)
         configureDateFormatter()
         configureWeekdays()
-        self.displayedDate = firstDayOfMonthForDate(dateValue)
         configureViewAppearance()
         doLayout()
     }
@@ -126,17 +127,26 @@ class NMDatePicker: NSView {
     
     
     // MARK: - Private properties
+    private let calendar = NSCalendar.currentCalendar()
+    private let dateUnitMask =  NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitWeekday
+    private let dateTimeUnitMask =  NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth |
+                                    NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitHour |
+                                    NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitSecond |
+                                    NSCalendarUnit.CalendarUnitWeekday
+    private var firstDayComponents: NSDateComponents!
+    
     override var flipped: Bool { return true }
     private var currentMonthLabel: NSTextField!
     private var monthBackButton: NSButton!
     private var monthForwardButton: NSButton!
-    private var displayedDate: NSDate?
     private var weekdays: [String] = []
     private var weekdayLabels: [NSTextField] = []
     private var days: [NMDatePickerDayView] = []
     private var currentHeight: Int
     private var lineHeight: CGFloat
     private var dateFormatter: NSDateFormatter?
+    
+    
     
     
     
@@ -152,20 +162,20 @@ class NMDatePicker: NSView {
     }
     
     func monthForwardAction(sender: NSButton) {
-        self.displayedDate = oneMonthLaterDateForDate(self.displayedDate!)
+        self.firstDayComponents = oneMonthLaterDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
         
     }
     
     func monthBackAction(sender: NSButton) {
-        self.displayedDate = oneMonthEarlierDateForDate(self.displayedDate!)
+        self.firstDayComponents = oneMonthEarlierDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
     }
     
     func displayViewForDate(date: NSDate) {
-        self.displayedDate = date
+        self.firstDayComponents = firstDayOfMonthForDate(date)
         self.dateValue = date
         updateCurrentMonthLabel()
         updateDaysView()
@@ -205,8 +215,8 @@ class NMDatePicker: NSView {
                 nextLine = false
                 originY += dayViewHeight
             }
-            let weekday = weekdayForDate(dayView.date)
-            let column = columnForWeekday(weekday!)
+            let weekday = dayView.dateComponents.weekday
+            let column = columnForWeekday(weekday)
             var originX: Int = dayViewWidth * column
             dayView.frame = NSMakeRect(CGFloat(originX), CGFloat(originY), CGFloat(dayViewWidth), CGFloat(dayViewHeight))
             if column == 6 {
@@ -284,7 +294,7 @@ class NMDatePicker: NSView {
     
     
     private func updateCurrentMonthLabel() {
-        self.currentMonthLabel.stringValue = monthAndYearForDate(self.displayedDate!)
+        self.currentMonthLabel.stringValue = monthAndYearForDay(self.firstDayComponents)
         
     }
 
@@ -298,10 +308,10 @@ class NMDatePicker: NSView {
         self.days.removeAll(keepCapacity: true)
         
         // Create new set of day views
-        let daysInMonth = daysCountInMonthForDate(self.displayedDate!)
-        var date = firstDayOfMonthForDate(self.displayedDate!)
+        let daysInMonth = daysCountInMonthForDay(self.firstDayComponents)
+        var dateComponents = self.firstDayComponents
         for var i = 0; i < daysInMonth; i++ {
-            let day = NMDatePickerDayView(date: date!)
+            let day = NMDatePickerDayView(dateComponents: dateComponents)
             day.backgroundColor = self.backgroundColor
             day.selectedBackgroundColor = self.selectedBackgroundColor
             day.selectedBorderColor = self.selectedBorderColor
@@ -316,10 +326,17 @@ class NMDatePicker: NSView {
             // Selected day callback action
             day.daySelectedAction = {
                 () -> () in
-                self.dateValue = day.date
-                self.updateDaysView()
-                if let delegate = self.delegate {
-                    delegate.nmDatePicker(self, selectedDate: self.dateValue)
+                var dateComponents = day.dateComponents
+                var dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                dateComponents.hour = dateValueComponents.hour
+                dateComponents.minute = dateValueComponents.minute
+                dateComponents.second = dateValueComponents.second
+                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                    self.dateValue = dateValue
+                    self.updateDaysView()
+                    if let delegate = self.delegate {
+                        delegate.nmDatePicker(self, selectedDate: self.dateValue)
+                    }
                 }
             }
             
@@ -330,15 +347,15 @@ class NMDatePicker: NSView {
             }
             
             
-            if NMDatePicker.isEqualDate(self.dateValue, anotherDate: date!) {
+            if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: self.dateValue) {
                 day.setSelected(true)
             }
+
             self.days.append(day)
             self.addSubview(day)
-            date = nextDayForDate(date!)
+            dateComponents = nextDayForDay(dateComponents)
         }
-        
-        //self.resizeSubviewsWithOldSize(self.frame.size)
+
         self.doLayout()
     }
     
@@ -351,114 +368,84 @@ class NMDatePicker: NSView {
     
     // MARK: - Date calculations
     
-    
-    class func isEqualDate(date: NSDate, anotherDate: NSDate) -> Bool {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let dateComponents = calendar?.components(NSCalendarUnit.CalendarUnitYear
-            | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate:date)
-        let anotherDateComponents = calendar?.components(NSCalendarUnit.CalendarUnitYear
+    class func isEqualDay(dateComponents: NSDateComponents, anotherDate: NSDate) -> Bool {
+        let calendar = NSCalendar.currentCalendar()
+        let anotherDateComponents = calendar.components(NSCalendarUnit.CalendarUnitYear
             | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate:anotherDate)
         
-        if dateComponents?.day == anotherDateComponents?.day && dateComponents?.month == anotherDateComponents?.month
-            && dateComponents?.year == anotherDateComponents?.year {
+        if dateComponents.day == anotherDateComponents.day && dateComponents.month == anotherDateComponents.month
+            && dateComponents.year == anotherDateComponents.year {
                 return true
         } else {
             return false
         }
     }
     
-    private func monthAndYearForDate(date: NSDate) -> String {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: date)
-        let year = components?.year
-        let month = components?.month
+    private func monthAndYearForDay(dateComponents: NSDateComponents) -> String {
+        let year = dateComponents.year
+        let month = dateComponents.month
         let months = self.dateFormatter!.standaloneMonthSymbols
-        let monthSymbol = months[month!-1] as! NSString
+        let monthSymbol = months[month-1] as! NSString
         
-        return "\(monthSymbol) \(year!)"
+        return "\(monthSymbol) \(year)"
     }
     
-    
-    private func weekdayForDate(date: NSDate) -> NSInteger? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitWeekday, fromDate: date)
-        return components?.weekday
+    private func firstDayOfMonthForDate(date: NSDate) -> NSDateComponents {
+        var dateComponents = self.calendar.components(self.dateUnitMask, fromDate: date)
+        let weekday = dateComponents.weekday
+        let day = dateComponents.day
+        let weekOffset = day % 7
+        
+        dateComponents.day = 1
+        dateComponents.weekday = weekday - weekOffset + 1
+        if dateComponents.weekday < 0 {
+            dateComponents.weekday += 7
+        }
+        
+        return dateComponents
     }
     
-    
-    private func firstDayOfMonthForDate(date: NSDate) -> NSDate? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: date)
-        let dayComponents = NSDateComponents()
-        dayComponents.hour = 12
-        dayComponents.day = 1
-        dayComponents.month = (components?.month)!
-        dayComponents.year = (components?.year)!
-        return calendar?.dateFromComponents(dayComponents)
+    private func daysCountInMonthForDay(dateComponents: NSDateComponents) -> Int {
+        let date = self.calendar.dateFromComponents(dateComponents)!
+        let days = self.calendar.rangeOfUnit(NSCalendarUnit.CalendarUnitDay, inUnit: NSCalendarUnit.CalendarUnitMonth, forDate: date)
+        return days.length
     }
     
-    private func nextDayForDate(date: NSDate) -> NSDate? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth
-            | NSCalendarUnit.CalendarUnitDay, fromDate: date)
-        let day = components?.day
-        let dayComponents = NSDateComponents()
-        dayComponents.hour = 12
-        dayComponents.day = day!+1
-        dayComponents.month = (components?.month)!
-        dayComponents.year = (components?.year)!
-        return calendar?.dateFromComponents(dayComponents)
+    private func nextDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
+        let nextDateComponents = NSDateComponents()
+        nextDateComponents.day = dateComponents.day + 1
+        nextDateComponents.month = dateComponents.month
+        nextDateComponents.year = dateComponents.year
+        nextDateComponents.weekday = dateComponents.weekday + 1
+        if nextDateComponents.weekday > 7 {
+            nextDateComponents.weekday -= 7
+        }
+        return nextDateComponents
     }
 
-    private func lastDayOfMonthForDate(date: NSDate) -> NSDate? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: date)
-        let dayComponents = NSDateComponents()
-        dayComponents.hour = 12
-        dayComponents.day = 0
-        dayComponents.month = (components?.month)!+1
-        dayComponents.year = (components?.year)!
-        return calendar?.dateFromComponents(dayComponents)
+    
+    private func oneMonthLaterDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
+        var newDateComponents = NSDateComponents()
+        newDateComponents.day = dateComponents.day
+        newDateComponents.month = dateComponents.month + 1
+        newDateComponents.year = dateComponents.year
+        let oneMonthLaterDay = self.calendar.dateFromComponents(newDateComponents)!
+        return self.calendar.components(self.dateUnitMask, fromDate: oneMonthLaterDay)
     }
     
-    private func oneMonthLaterDateForDate(date: NSDate) -> NSDate? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: date)
-        let dayComponents = NSDateComponents()
-        dayComponents.hour = 12
-        dayComponents.day = 1
-        dayComponents.month = (components?.month)! + 1
-        dayComponents.year = (components?.year)!
-        return calendar?.dateFromComponents(dayComponents)
+    private func oneMonthEarlierDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
+        var newDateComponents = NSDateComponents()
+        newDateComponents.day = dateComponents.day
+        newDateComponents.month = dateComponents.month - 1
+        newDateComponents.year = dateComponents.year
+        let oneMonthLaterDay = self.calendar.dateFromComponents(newDateComponents)!
+        return self.calendar.components(self.dateUnitMask, fromDate: oneMonthLaterDay)
     }
     
-    private func oneMonthEarlierDateForDate(date: NSDate) -> NSDate? {
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: date)
-        let dayComponents = NSDateComponents()
-        dayComponents.hour = 12
-        dayComponents.day = 1
-        dayComponents.month = (components?.month)! - 1
-        dayComponents.year = (components?.year)!
-        return calendar?.dateFromComponents(dayComponents)
-    }
-    
-    private func daysCountInMonthForDate(date: NSDate) -> NSInteger? {
-        var calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        calendar?.firstWeekday = self.firstDayOfWeek
-        
-        let lastDay = lastDayOfMonthForDate(date)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitDay , fromDate: lastDay!)
-        let daysCount = components?.day
-        
-        return daysCount
-    }
     
     private func weekdayNameForColumn(column: Int) -> String {
         var index = column + self.firstDayOfWeek - 1
         if index >= 7 { index -= 7 }
-        
-        //let weekdays = NMDatePicker.staticWeekdays()
         return self.weekdays[index]
     }
     

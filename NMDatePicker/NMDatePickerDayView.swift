@@ -14,7 +14,7 @@ import Cocoa
 class NMDatePickerDayView: NSView {
     
     // MARK: - Public properties
-    let date: NSDate
+    let dateComponents: NSDateComponents
     var backgroundColor: NSColor?
     var borderColor: NSColor?
     var selected: Bool?
@@ -51,17 +51,16 @@ class NMDatePickerDayView: NSView {
     
     // MARK: - Initializers
     
-    init(date: NSDate) {
-        self.date = date
+    init(dateComponents: NSDateComponents) {
+        self.dateComponents = dateComponents
         self.font = NSFont.systemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
         super.init(frame: NSZeroRect)
         
         
         // Get day component
-        var calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let components = calendar?.components(NSCalendarUnit.CalendarUnitDay , fromDate: date)
-        let day = components?.day
+        var calendar = NSCalendar.currentCalendar()
+        let day = self.dateComponents.day
         
         // Configure label
         self.label = NSTextField(frame: NSZeroRect)
@@ -71,7 +70,7 @@ class NMDatePickerDayView: NSView {
         self.label.alignment = NSTextAlignment.CenterTextAlignment
         self.label.textColor = NSColor.blackColor()
         self.label.font = self.font
-        self.label.stringValue = "\(day!)"
+        self.label.stringValue = "\(day)"
         self.addSubview(self.label)
         
     }
@@ -115,7 +114,7 @@ class NMDatePickerDayView: NSView {
                 color.setStroke()
                 path.stroke()
             }
-        } else if NMDatePicker.isEqualDate(self.date, anotherDate: NSDate()) {
+        } else if NMDatePicker.isEqualDay(self.dateComponents, anotherDate: NSDate()) {
             if let color = self.todayBackgroundColor {
                 color.setFill()
                 path.fill()

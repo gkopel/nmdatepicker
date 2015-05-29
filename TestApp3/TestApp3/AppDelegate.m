@@ -77,4 +77,13 @@
     [self updateDateLabel:selectedDate];
 }
 
+
+- (void)nmDatePicker:(NMDatePicker * __nonnull)datePicker newSize:(NSSize)newSize {
+    CGRect frame = self.datePicker.frame;
+    frame.origin.y += frame.size.height - newSize.height;
+    frame.size.height = newSize.height;
+    self.datePicker.frame = frame;
+    
+}
+
 @end

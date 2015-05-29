@@ -35,7 +35,7 @@
     self.datePicker.todayBorderColor = [NSColor blueColor];
     self.datePicker.highlightedBackgroundColor = [NSColor lightGrayColor];
     self.datePicker.highlightedBorderColor = [NSColor darkGrayColor];
-    self.datePicker.selectedBackgroundColor = [NSColor orangeColor];
+    self.datePicker.selectedBackgroundColor = [NSColor redColor];
     self.datePicker.selectedBorderColor = [NSColor blueColor];
     
     
@@ -80,6 +80,7 @@
 
 
 - (void)nmDatePicker:(NMDatePicker *)datePicker selectedDate:(NSDate *)selectedDate {
+    NSLog(@"selected date: %@", selectedDate);
     [self updateDateLabel:selectedDate];
 }
 
