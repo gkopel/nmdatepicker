@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     }
     
     class func shortDateForDate(date: NSDate) -> NSString {
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale.currentLocale()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         

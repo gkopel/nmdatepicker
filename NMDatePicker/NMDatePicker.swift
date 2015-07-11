@@ -128,11 +128,8 @@ class NMDatePicker: NSView {
     
     // MARK: - Private properties
     private let calendar = NSCalendar.currentCalendar()
-    private let dateUnitMask =  NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitWeekday
-    private let dateTimeUnitMask =  NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth |
-                                    NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitHour |
-                                    NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitSecond |
-                                    NSCalendarUnit.CalendarUnitWeekday
+    private let dateUnitMask: NSCalendarUnit =  [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Weekday]
+    private let dateTimeUnitMask: NSCalendarUnit =  [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Second, NSCalendarUnit.Weekday]
     private var firstDayComponents: NSDateComponents!
     
     override var flipped: Bool { return true }
@@ -247,22 +244,22 @@ class NMDatePicker: NSView {
         self.currentMonthLabel.editable = false
         self.currentMonthLabel.backgroundColor = NSColor.clearColor()
         self.currentMonthLabel.bordered = false
-        self.currentMonthLabel.alignment = NSTextAlignment.CenterTextAlignment
+        self.currentMonthLabel.alignment = NSTextAlignment.Center
         self.currentMonthLabel.font = self.titleFont
         self.currentMonthLabel.textColor = self.textColor
         self.addSubview(self.currentMonthLabel)
         
         self.monthBackButton.title = "<"
-        self.monthBackButton.alignment = NSTextAlignment.CenterTextAlignment
-        let backBtnCell = self.monthBackButton.cell() as! NSButtonCell
+        self.monthBackButton.alignment = NSTextAlignment.Center
+        let backBtnCell = self.monthBackButton.cell as! NSButtonCell
         backBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
         self.monthBackButton.target = self
         self.monthBackButton.action = Selector("monthBackAction:")
         self.addSubview(self.monthBackButton)
         
         self.monthForwardButton.title = ">"
-        self.monthForwardButton.alignment = NSTextAlignment.CenterTextAlignment
-        let forwardBtnCell = self.monthForwardButton.cell() as! NSButtonCell
+        self.monthForwardButton.alignment = NSTextAlignment.Center
+        let forwardBtnCell = self.monthForwardButton.cell as! NSButtonCell
         forwardBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
         self.monthForwardButton.target = self
         self.monthForwardButton.action = Selector("monthForwardAction:")
@@ -275,13 +272,13 @@ class NMDatePicker: NSView {
         self.weekdayLabels.removeAll(keepCapacity: true)
         for var i = 0; i < 7; i++ {
             let weekday = weekdayNameForColumn(i)
-            var weekdayLabel = NSTextField(frame: NSZeroRect)
+            let weekdayLabel = NSTextField(frame: NSZeroRect)
             weekdayLabel.font = self.font
             weekdayLabel.textColor = self.textColor
             weekdayLabel.editable = false
             weekdayLabel.backgroundColor = NSColor.clearColor()
             weekdayLabel.bordered = false
-            weekdayLabel.alignment = NSTextAlignment.CenterTextAlignment
+            weekdayLabel.alignment = NSTextAlignment.Center
             weekdayLabel.stringValue = weekday
             
             self.weekdayLabels.append(weekdayLabel)
@@ -326,8 +323,8 @@ class NMDatePicker: NSView {
             // Selected day callback action
             day.daySelectedAction = {
                 () -> () in
-                var dateComponents = day.dateComponents
-                var dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                let dateComponents = day.dateComponents
+                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
                 dateComponents.hour = dateValueComponents.hour
                 dateComponents.minute = dateValueComponents.minute
                 dateComponents.second = dateValueComponents.second
@@ -360,9 +357,8 @@ class NMDatePicker: NSView {
     }
     
     class func lineHeightForFont(font: NSFont) -> CGFloat {
-        var attribs = NSDictionary(object: font, forKey: NSFontAttributeName)
-        
-        let size = "Aa".sizeWithAttributes(attribs as [NSObject : AnyObject])
+        let attribs = NSDictionary(object: font, forKey: NSFontAttributeName)
+        let size = "Aa".sizeWithAttributes(attribs as? [String : AnyObject])
         return round(size.height)
     }
     
@@ -370,8 +366,7 @@ class NMDatePicker: NSView {
     
     class func isEqualDay(dateComponents: NSDateComponents, anotherDate: NSDate) -> Bool {
         let calendar = NSCalendar.currentCalendar()
-        let anotherDateComponents = calendar.components(NSCalendarUnit.CalendarUnitYear
-            | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate:anotherDate)
+        let anotherDateComponents = calendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day], fromDate:anotherDate)
         
         if dateComponents.day == anotherDateComponents.day && dateComponents.month == anotherDateComponents.month
             && dateComponents.year == anotherDateComponents.year {
@@ -385,13 +380,13 @@ class NMDatePicker: NSView {
         let year = dateComponents.year
         let month = dateComponents.month
         let months = self.dateFormatter!.standaloneMonthSymbols
-        let monthSymbol = months[month-1] as! NSString
+        let monthSymbol = months[month-1] as NSString
         
         return "\(monthSymbol) \(year)"
     }
     
     private func firstDayOfMonthForDate(date: NSDate) -> NSDateComponents {
-        var dateComponents = self.calendar.components(self.dateUnitMask, fromDate: date)
+        let dateComponents = self.calendar.components(self.dateUnitMask, fromDate: date)
         let weekday = dateComponents.weekday
         let day = dateComponents.day
         let weekOffset = day % 7
@@ -407,7 +402,7 @@ class NMDatePicker: NSView {
     
     private func daysCountInMonthForDay(dateComponents: NSDateComponents) -> Int {
         let date = self.calendar.dateFromComponents(dateComponents)!
-        let days = self.calendar.rangeOfUnit(NSCalendarUnit.CalendarUnitDay, inUnit: NSCalendarUnit.CalendarUnitMonth, forDate: date)
+        let days = self.calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
         return days.length
     }
     
@@ -425,7 +420,7 @@ class NMDatePicker: NSView {
 
     
     private func oneMonthLaterDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
-        var newDateComponents = NSDateComponents()
+        let newDateComponents = NSDateComponents()
         newDateComponents.day = dateComponents.day
         newDateComponents.month = dateComponents.month + 1
         newDateComponents.year = dateComponents.year
@@ -434,7 +429,7 @@ class NMDatePicker: NSView {
     }
     
     private func oneMonthEarlierDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
-        var newDateComponents = NSDateComponents()
+        let newDateComponents = NSDateComponents()
         newDateComponents.day = dateComponents.day
         newDateComponents.month = dateComponents.month - 1
         newDateComponents.year = dateComponents.year
@@ -457,13 +452,12 @@ class NMDatePicker: NSView {
 
     
     private func configureWeekdays() {
-        var weekdays: [String] = []
         if  let dateFormatter = self.dateFormatter {
             dateFormatter.dateFormat = "EEEEE"
             let oneDayInterval = NSTimeInterval(60*60*24)
             let now = NSDate()
             let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-            let components = calendar?.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth, fromDate: now)
+            let components = calendar?.components([NSCalendarUnit.Year, NSCalendarUnit.Month], fromDate: now)
             let dayComponents = NSDateComponents()
             dayComponents.hour = 12
             dayComponents.weekday = 1
@@ -482,7 +476,7 @@ class NMDatePicker: NSView {
     
     
     private func configureDateFormatter() {
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter = dateFormatter
     }

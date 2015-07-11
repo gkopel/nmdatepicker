@@ -17,7 +17,7 @@ NSDatePicker replacement allowing for appearance customisation.
 
 ## Requirements
 - OS X 10.10 or later
-- Swift 1.2 or later
+- Swift 2.0 or later
 
 ## Delegate Methods
 ```swift

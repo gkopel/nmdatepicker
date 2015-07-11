@@ -59,7 +59,6 @@ class NMDatePickerDayView: NSView {
         
         
         // Get day component
-        var calendar = NSCalendar.currentCalendar()
         let day = self.dateComponents.day
         
         // Configure label
@@ -67,7 +66,7 @@ class NMDatePickerDayView: NSView {
         self.label.editable = false
         self.label.backgroundColor = NSColor.clearColor()
         self.label.bordered = false
-        self.label.alignment = NSTextAlignment.CenterTextAlignment
+        self.label.alignment = NSTextAlignment.Center
         self.label.textColor = NSColor.blackColor()
         self.label.font = self.font
         self.label.stringValue = "\(day)"
@@ -181,7 +180,7 @@ class NMDatePickerDayView: NSView {
         if self.trackingArea != nil {
             self.removeTrackingArea(self.trackingArea!)
         }
-        let opts = NSTrackingAreaOptions.MouseEnteredAndExited | NSTrackingAreaOptions.ActiveAlways
+        let opts: NSTrackingAreaOptions = [NSTrackingAreaOptions.MouseEnteredAndExited, NSTrackingAreaOptions.ActiveAlways]
         self.trackingArea = NSTrackingArea(rect: self.bounds, options: opts, owner: self, userInfo: nil)
         self.addTrackingArea(self.trackingArea!)
         

@@ -14,13 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var label: NSTextField!
     weak var datePicker: NMDatePicker!
-
-
-    // TODO: locales as parameter
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        let contentView = self.window.contentView as! NSView
+        let contentView = self.window.contentView
         let date = NSDate()
         let frame = CGRectMake(20, 38, 256, 280)
         
@@ -58,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     }
     
     class func shortDateForDate(date: NSDate) -> NSString {
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
