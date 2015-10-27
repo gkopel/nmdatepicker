@@ -39,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
         datePicker.selectedBackgroundColor = NSColor.orangeColor()
         datePicker.selectedBorderColor = NSColor.blueColor()
         
-        contentView.addSubview(datePicker)
+        contentView!.addSubview(datePicker)
         
         
         updateDateLabel(date)
