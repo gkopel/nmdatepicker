@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var label: NSTextField!
+    @IBOutlet weak var dateMarker: NSDatePicker!
     weak var datePicker: NMDatePicker!
     
     
@@ -42,7 +43,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
         contentView!.addSubview(datePicker)
         
         
+        dateMarker.dateValue = date.dateByAddingTimeInterval(60*60*24)
         updateDateLabel(date)
+        
+        
+        
+        
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -52,6 +58,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     
     @IBAction func showTodayAction(sender: AnyObject) {
         self.datePicker.displayViewForDate(NSDate())
+    }
+    
+    
+    @IBAction func markDateAction(sender: AnyObject) {
+        self.datePicker.markDate(self.dateMarker.dateValue, backgroundColor: NSColor.purpleColor(), borderColor: NSColor.redColor(), textColor: NSColor.whiteColor())
+    }
+    
+    @IBAction func unmarkDateAction(sender: AnyObject) {
+        self.datePicker.unmarkDate(self.dateMarker.dateValue)
+    }
+    
+    @IBAction func unmarkAllAction(sender: AnyObject) {
+        self.datePicker.unmarkAllDates()
     }
     
     class func shortDateForDate(date: NSDate) -> NSString {

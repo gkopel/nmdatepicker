@@ -36,6 +36,7 @@ class NMDatePicker: NSView {
         self.font = NSFont.systemFontOfSize(12.0)
         self.titleFont = NSFont.boldSystemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
+        self.markedDates = [NSDate: [String: NSColor]]()
         super.init(frame: frame)
         configurePicker()
     }
@@ -49,6 +50,7 @@ class NMDatePicker: NSView {
         self.font = NSFont.systemFontOfSize(12.0)
         self.titleFont = NSFont.boldSystemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
+        self.markedDates = [NSDate: [String: NSColor]]()
         super.init(coder: coder)
         configurePicker()
     }
@@ -124,6 +126,25 @@ class NMDatePicker: NSView {
         }
     }
     
+    // MARK: - public methods
+    
+    
+    func markDate(date: NSDate, backgroundColor: NSColor, borderColor: NSColor, textColor: NSColor) {
+        let markedDate = ["backgroundColor": backgroundColor, "borderColor": borderColor, "textColor": textColor]
+        self.markedDates[date] = markedDate
+        updateDaysView()
+    }
+    
+    func unmarkDate(date: NSDate) {
+        self.markedDates[date] = nil
+        updateDaysView()
+    }
+    
+    func unmarkAllDates() {
+        self.markedDates.removeAll()
+        updateDaysView()
+    }
+    
     
     
     // MARK: - Private properties
@@ -142,6 +163,8 @@ class NMDatePicker: NSView {
     private var currentHeight: Int
     private var lineHeight: CGFloat
     private var dateFormatter: NSDateFormatter?
+    private var markedDates: [ NSDate: [ String: NSColor ] ]
+    
     
     
     
@@ -310,15 +333,14 @@ class NMDatePicker: NSView {
         for var i = 0; i < daysInMonth; i++ {
             let day = NMDatePickerDayView(dateComponents: dateComponents)
             day.backgroundColor = self.backgroundColor
-            day.selectedBackgroundColor = self.selectedBackgroundColor
-            day.selectedBorderColor = self.selectedBorderColor
+            
             day.highlightedBorderColor = self.highlightedBorderColor
             day.highlightedBackgroundColor = self.highlightedBackgroundColor
             day.todayBackgroundColor = self.todayBackgroundColor
             day.todayBorderColor = self.todayBorderColor
             day.font = self.font
             day.textColor = self.textColor
-            day.selectedTextColor = self.selectedTextColor
+            
             
             // Selected day callback action
             day.daySelectedAction = {
@@ -344,9 +366,29 @@ class NMDatePicker: NSView {
             }
             
             
+            
+            
+            for markedDate in self.markedDates.keys {
+                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: markedDate) {
+                    if let markedDateParams = self.markedDates[markedDate] {
+                        day.selectedBackgroundColor = markedDateParams["backgroundColor"]
+                        day.selectedBorderColor = markedDateParams["borderColor"]
+                        day.selectedTextColor = markedDateParams["textColor"]
+                        day.setSelected(true)
+                    }
+                    
+                }
+            }
+            
+            
             if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: self.dateValue) {
+                day.selectedBackgroundColor = self.selectedBackgroundColor
+                day.selectedBorderColor = self.selectedBorderColor
+                day.selectedTextColor = self.selectedTextColor
                 day.setSelected(true)
             }
+            
+            
 
             self.days.append(day)
             self.addSubview(day)
