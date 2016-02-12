@@ -404,6 +404,11 @@ class NMDatePicker: NSView {
         return round(size.height)
     }
     
+    override func setFrameSize(newSize: NSSize) {
+        super.setFrameSize(newSize)
+        doLayout()
+    }
+    
     // MARK: - Date calculations
     
     class func isEqualDay(dateComponents: NSDateComponents, anotherDate: NSDate) -> Bool {
