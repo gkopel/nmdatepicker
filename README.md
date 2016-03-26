@@ -17,8 +17,8 @@ NSDatePicker replacement allowing for appearance customisation.
 - Add NMDatePicker.swift and NMDatePickerDayView.swift to your project
 
 ## Requirements
-- OS X 10.10 or later
-- Swift 2.0 or later
+- OS X 10.11 or later
+- Swift 2.2 or later
 
 ## Delegate Methods
 ```swift

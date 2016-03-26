@@ -277,7 +277,7 @@ class NMDatePicker: NSView {
         let backBtnCell = self.monthBackButton.cell as! NSButtonCell
         backBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
         self.monthBackButton.target = self
-        self.monthBackButton.action = Selector("monthBackAction:")
+        self.monthBackButton.action = #selector(NMDatePicker.monthBackAction(_:))
         self.addSubview(self.monthBackButton)
         
         self.monthForwardButton.title = ">"
@@ -285,7 +285,7 @@ class NMDatePicker: NSView {
         let forwardBtnCell = self.monthForwardButton.cell as! NSButtonCell
         forwardBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
         self.monthForwardButton.target = self
-        self.monthForwardButton.action = Selector("monthForwardAction:")
+        self.monthForwardButton.action = #selector(NMDatePicker.monthForwardAction(_:))
         self.addSubview(self.monthForwardButton)
         
         // Wekdays
@@ -293,7 +293,7 @@ class NMDatePicker: NSView {
             weekdayLabel.removeFromSuperview()
         }
         self.weekdayLabels.removeAll(keepCapacity: true)
-        for var i = 0; i < 7; i++ {
+        for i in 0 ..< 7 {
             let weekday = weekdayNameForColumn(i)
             let weekdayLabel = NSTextField(frame: NSZeroRect)
             weekdayLabel.font = self.font
@@ -330,7 +330,7 @@ class NMDatePicker: NSView {
         // Create new set of day views
         let daysInMonth = daysCountInMonthForDay(self.firstDayComponents)
         var dateComponents = self.firstDayComponents
-        for var i = 0; i < daysInMonth; i++ {
+        for _ in 0 ..< daysInMonth {
             let day = NMDatePickerDayView(dateComponents: dateComponents)
             day.backgroundColor = self.backgroundColor
             
@@ -512,7 +512,7 @@ class NMDatePicker: NSView {
             dayComponents.month = (components?.month)!
             dayComponents.year = (components?.year)!
             var day = calendar?.dateFromComponents(dayComponents)
-            for var i = 0; i < 7; i++ {
+            for _ in 0 ..< 7 {
                 let daySymbol = dateFormatter.stringFromDate(day!)
                 self.weekdays.append(daySymbol)
                 day = day?.dateByAddingTimeInterval(oneDayInterval)
