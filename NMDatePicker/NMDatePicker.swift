@@ -148,9 +148,11 @@ public class NMDatePicker: NSView {
     private var firstDayComponents: NSDateComponents!
     
     override public var flipped: Bool { return true }
-    private var currentMonthLabel: NSTextField!
-    private var monthBackButton: NSButton!
-    private var monthForwardButton: NSButton!
+
+    private(set) public var currentMonthLabel: NSTextField!
+    private(set) public var monthBackButton: NSButton!
+    private(set) public var monthForwardButton: NSButton!
+
     private var weekdays: [String] = []
     private var weekdayLabels: [NSTextField] = []
     private var days: [NMDatePickerDayView] = []
@@ -158,10 +160,7 @@ public class NMDatePicker: NSView {
     private var lineHeight: CGFloat
     private var dateFormatter: NSDateFormatter?
     private var markedDates: [ NSDate: [ String: NSColor ] ]
-    
-    
-    
-    
+
     
     
     // MARK: - Layout
