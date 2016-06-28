@@ -8,21 +8,15 @@
 import Cocoa
 
 @objc public protocol NMDatePickerDelegate {
-    /*
-    This method notifies about the date selected in the date picker.
-    */
+    /// This method notifies about the date selected in the date picker. (Required)
     func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate)
     
-    /*
-    Optional method that allows to adjust date picker height
-    when the number of rows is changing between months.
-    */
+    /// Optional method that allows to adjust date picker height
+    /// when the number of rows is changing between months.
     optional func nmDatePicker(datePicker: NMDatePicker, newSize: NSSize)
 }
 
-/**
-* Custom date picker view
-*/
+/// Custom date picker view.
 public class NMDatePicker: NSView {
     
     

@@ -8,9 +8,7 @@
 import Cocoa
 
 
-/**
-* Custom view presenting single day in NMDatePickerView
-*/
+/// Custom view presenting single day in `NMDatePickerView`.
 public class NMDatePickerDayView: NSView {
     
     // MARK: - Public properties
@@ -40,8 +38,8 @@ public class NMDatePickerDayView: NSView {
     }
     
     // Callback actions
-    public var daySelectedAction: ((Void) -> (Void))?
-    public var dayHighlightedAction: ((Bool) -> (Void))?
+    var daySelectedAction: ((Void) -> (Void))?
+    var dayHighlightedAction: ((Bool) -> (Void))?
     
     
     // MARK: - Private properties
