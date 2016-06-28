@@ -7,7 +7,7 @@
 
 import Cocoa
 
-@objc protocol NMDatePickerDelegate {
+@objc public protocol NMDatePickerDelegate {
     /*
     This method notifies about the date selected in the date picker.
     */
@@ -23,11 +23,11 @@ import Cocoa
 /**
 * Custom date picker view
 */
-class NMDatePicker: NSView {
+public class NMDatePicker: NSView {
     
     
     // MARK: - Initializers
-    init(frame: NSRect, dateValue: NSDate) {
+    public init(frame: NSRect, dateValue: NSDate) {
         self.dateValue = dateValue
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
@@ -41,7 +41,7 @@ class NMDatePicker: NSView {
         configurePicker()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         self.dateValue = NSDate()
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
@@ -66,61 +66,61 @@ class NMDatePicker: NSView {
     }
     
     // MARK: - Public properties
-    var delegate: NMDatePickerDelegate?
-    var dateValue: NSDate
-    let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
-    var backgroundColor: NSColor? {
+    public var delegate: NMDatePickerDelegate?
+    public var dateValue: NSDate
+    public let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
+    public var backgroundColor: NSColor? {
         didSet {
             self.setNeedsDisplayInRect(self.bounds)
         }
     }
-    var titleFont: NSFont {
+    public var titleFont: NSFont {
         didSet {
             configureViewAppearance()
         }
     }
-    var font: NSFont {
+    public var font: NSFont {
         didSet {
             self.lineHeight = NMDatePicker.lineHeightForFont(font)
             configureViewAppearance()
         }
     }
-    var textColor: NSColor? {
+    public var textColor: NSColor? {
         didSet {
             configureViewAppearance()
         }
     }
-    var selectedTextColor: NSColor? {
+    public var selectedTextColor: NSColor? {
         didSet {
             configureViewAppearance()
         }
     }
-    var selectedBackgroundColor: NSColor? {
+    public var selectedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    var selectedBorderColor: NSColor? {
+    public var selectedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    var highlightedBackgroundColor: NSColor? {
+    public var highlightedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    var highlightedBorderColor: NSColor? {
+    public var highlightedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    var todayBackgroundColor: NSColor? {
+    public var todayBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    var todayBorderColor: NSColor? {
+    public var todayBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
@@ -129,18 +129,18 @@ class NMDatePicker: NSView {
     // MARK: - public methods
     
     
-    func markDate(date: NSDate, backgroundColor: NSColor, borderColor: NSColor, textColor: NSColor) {
+    public func markDate(date: NSDate, backgroundColor: NSColor, borderColor: NSColor, textColor: NSColor) {
         let markedDate = ["backgroundColor": backgroundColor, "borderColor": borderColor, "textColor": textColor]
         self.markedDates[date] = markedDate
         updateDaysView()
     }
     
-    func unmarkDate(date: NSDate) {
+    public func unmarkDate(date: NSDate) {
         self.markedDates[date] = nil
         updateDaysView()
     }
     
-    func unmarkAllDates() {
+    public func unmarkAllDates() {
         self.markedDates.removeAll()
         updateDaysView()
     }
@@ -153,7 +153,7 @@ class NMDatePicker: NSView {
     private let dateTimeUnitMask: NSCalendarUnit =  [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Second, NSCalendarUnit.Weekday]
     private var firstDayComponents: NSDateComponents!
     
-    override var flipped: Bool { return true }
+    override public var flipped: Bool { return true }
     private var currentMonthLabel: NSTextField!
     private var monthBackButton: NSButton!
     private var monthForwardButton: NSButton!
@@ -172,7 +172,7 @@ class NMDatePicker: NSView {
     
     // MARK: - Layout
 
-    override func drawRect(dirtyRect: NSRect) {
+    override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
         if let color = self.backgroundColor {
             color.setFill()
@@ -181,20 +181,20 @@ class NMDatePicker: NSView {
         
     }
     
-    func monthForwardAction(sender: NSButton) {
+    public func monthForwardAction(sender: NSButton) {
         self.firstDayComponents = oneMonthLaterDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
         
     }
     
-    func monthBackAction(sender: NSButton) {
+    public func monthBackAction(sender: NSButton) {
         self.firstDayComponents = oneMonthEarlierDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
     }
     
-    func displayViewForDate(date: NSDate) {
+    public func displayViewForDate(date: NSDate) {
         self.firstDayComponents = firstDayOfMonthForDate(date)
         self.dateValue = date
         updateCurrentMonthLabel()
@@ -398,13 +398,13 @@ class NMDatePicker: NSView {
         self.doLayout()
     }
     
-    class func lineHeightForFont(font: NSFont) -> CGFloat {
+    public class func lineHeightForFont(font: NSFont) -> CGFloat {
         let attribs = NSDictionary(object: font, forKey: NSFontAttributeName)
         let size = "Aa".sizeWithAttributes(attribs as? [String : AnyObject])
         return round(size.height)
     }
     
-    override func setFrameSize(newSize: NSSize) {
+    override public func setFrameSize(newSize: NSSize) {
         super.setFrameSize(newSize)
         doLayout()
     }
@@ -527,6 +527,4 @@ class NMDatePicker: NSView {
         dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter = dateFormatter
     }
-    
-    
 }
