@@ -7,16 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		504778AC1D22529E0014B82E /* NMDatePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504778AB1D2252930014B82E /* NMDatePicker.framework */; };
+		504778AD1D22529E0014B82E /* NMDatePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 504778AB1D2252930014B82E /* NMDatePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63B9310C1A630B64001F4A5B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9310B1A630B64001F4A5B /* AppDelegate.m */; };
 		63B9310E1A630B64001F4A5B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9310D1A630B64001F4A5B /* main.m */; };
 		63B931101A630B64001F4A5B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B9310F1A630B64001F4A5B /* Images.xcassets */; };
 		63B931131A630B64001F4A5B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63B931111A630B64001F4A5B /* MainMenu.xib */; };
 		63B9311F1A630B64001F4A5B /* TestApp4Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9311E1A630B64001F4A5B /* TestApp4Tests.m */; };
-		63B9312E1A630BCF001F4A5B /* NMDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B9312C1A630BCF001F4A5B /* NMDatePicker.swift */; };
-		63B9312F1A630BCF001F4A5B /* NMDatePickerDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B9312D1A630BCF001F4A5B /* NMDatePickerDayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		504778AA1D2252930014B82E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504778A61D2252930014B82E /* NMDatePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 504778911D224FD90014B82E;
+			remoteInfo = NMDatePicker;
+		};
+		504778AE1D22529E0014B82E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504778A61D2252930014B82E /* NMDatePicker.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 504778901D224FD90014B82E;
+			remoteInfo = NMDatePicker;
+		};
 		63B931191A630B64001F4A5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 63B930FD1A630B64001F4A5B /* Project object */;
@@ -26,7 +40,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		504778B01D22529F0014B82E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				504778AD1D22529E0014B82E /* NMDatePicker.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		504778A61D2252930014B82E /* NMDatePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NMDatePicker.xcodeproj; path = ../NMDatePicker.xcodeproj; sourceTree = "<group>"; };
 		63B931051A630B64001F4A5B /* TestApp4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B931091A630B64001F4A5B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63B9310A1A630B64001F4A5B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -38,8 +67,6 @@
 		63B9311D1A630B64001F4A5B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63B9311E1A630B64001F4A5B /* TestApp4Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestApp4Tests.m; sourceTree = "<group>"; };
 		63B931281A630BB0001F4A5B /* TestApp4-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestApp4-Bridging-Header.h"; sourceTree = "<group>"; };
-		63B9312C1A630BCF001F4A5B /* NMDatePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NMDatePicker.swift; path = ../../NMDatePicker/NMDatePicker.swift; sourceTree = "<group>"; };
-		63B9312D1A630BCF001F4A5B /* NMDatePickerDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NMDatePickerDayView.swift; path = ../../NMDatePicker/NMDatePickerDayView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				504778AC1D22529E0014B82E /* NMDatePicker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +88,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		504778A71D2252930014B82E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				504778AB1D2252930014B82E /* NMDatePicker.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		63B930FC1A630B64001F4A5B = {
 			isa = PBXGroup;
 			children = (
 				63B931071A630B64001F4A5B /* TestApp4 */,
 				63B9311B1A630B64001F4A5B /* TestApp4Tests */,
 				63B931061A630B64001F4A5B /* Products */,
+				504778A61D2252930014B82E /* NMDatePicker.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,7 +118,6 @@
 		63B931071A630B64001F4A5B /* TestApp4 */ = {
 			isa = PBXGroup;
 			children = (
-				63B9312B1A630BBA001F4A5B /* NMDatePicker */,
 				63B9310A1A630B64001F4A5B /* AppDelegate.h */,
 				63B9310B1A630B64001F4A5B /* AppDelegate.m */,
 				63B9310F1A630B64001F4A5B /* Images.xcassets */,
@@ -118,15 +154,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		63B9312B1A630BBA001F4A5B /* NMDatePicker */ = {
-			isa = PBXGroup;
-			children = (
-				63B9312C1A630BCF001F4A5B /* NMDatePicker.swift */,
-				63B9312D1A630BCF001F4A5B /* NMDatePickerDayView.swift */,
-			);
-			name = NMDatePicker;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -137,10 +164,12 @@
 				63B931011A630B64001F4A5B /* Sources */,
 				63B931021A630B64001F4A5B /* Frameworks */,
 				63B931031A630B64001F4A5B /* Resources */,
+				504778B01D22529F0014B82E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				504778AF1D22529E0014B82E /* PBXTargetDependency */,
 			);
 			name = TestApp4;
 			productName = TestApp4;
@@ -195,6 +224,12 @@
 			mainGroup = 63B930FC1A630B64001F4A5B;
 			productRefGroup = 63B931061A630B64001F4A5B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 504778A71D2252930014B82E /* Products */;
+					ProjectRef = 504778A61D2252930014B82E /* NMDatePicker.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				63B931041A630B64001F4A5B /* TestApp4 */,
@@ -202,6 +237,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		504778AB1D2252930014B82E /* NMDatePicker.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NMDatePicker.framework;
+			remoteRef = 504778AA1D2252930014B82E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		63B931031A630B64001F4A5B /* Resources */ = {
@@ -227,10 +272,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63B9312E1A630BCF001F4A5B /* NMDatePicker.swift in Sources */,
 				63B9310E1A630B64001F4A5B /* main.m in Sources */,
 				63B9310C1A630B64001F4A5B /* AppDelegate.m in Sources */,
-				63B9312F1A630BCF001F4A5B /* NMDatePickerDayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +288,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		504778AF1D22529E0014B82E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NMDatePicker;
+			targetProxy = 504778AE1D22529E0014B82E /* PBXContainerItemProxy */;
+		};
 		63B9311A1A630B64001F4A5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 63B931041A630B64001F4A5B /* TestApp4 */;
@@ -347,6 +395,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = TestApp4/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.netmedia-software.$(PRODUCT_NAME:rfc1034identifier)";
@@ -362,6 +411,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = TestApp4/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.netmedia-software.$(PRODUCT_NAME:rfc1034identifier)";

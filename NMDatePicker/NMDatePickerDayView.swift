@@ -8,31 +8,29 @@
 import Cocoa
 
 
-/**
-* Custom view presenting single day in NMDatePickerView
-*/
-class NMDatePickerDayView: NSView {
+/// Custom view presenting single day in `NMDatePickerView`.
+public class NMDatePickerDayView: NSView {
     
     // MARK: - Public properties
-    let dateComponents: NSDateComponents
-    var backgroundColor: NSColor?
-    var borderColor: NSColor?
-    var selected: Bool?
-    var highlighted: Bool?
-    var highlightedBackgroundColor: NSColor?
-    var highlightedBorderColor: NSColor?
-    var selectedBackgroundColor: NSColor?
-    var selectedBorderColor: NSColor?
-    var todayBackgroundColor: NSColor?
-    var todayBorderColor: NSColor?
-    var textColor: NSColor? {
+    public let dateComponents: NSDateComponents
+    public var backgroundColor: NSColor?
+    public var borderColor: NSColor?
+    public var selected: Bool?
+    public var highlighted: Bool?
+    public var highlightedBackgroundColor: NSColor?
+    public var highlightedBorderColor: NSColor?
+    public var selectedBackgroundColor: NSColor?
+    public var selectedBorderColor: NSColor?
+    public var todayBackgroundColor: NSColor?
+    public var todayBorderColor: NSColor?
+    public var textColor: NSColor? {
         didSet {
             self.label.textColor = textColor
         }
     }
-    var selectedTextColor: NSColor?
-    var highlightedTextColor: NSColor?
-    var font: NSFont {
+    public var selectedTextColor: NSColor?
+    public var highlightedTextColor: NSColor?
+    public var font: NSFont {
         didSet {
             self.label.font = font
             self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
@@ -51,7 +49,7 @@ class NMDatePickerDayView: NSView {
     
     // MARK: - Initializers
     
-    init(dateComponents: NSDateComponents) {
+    public init(dateComponents: NSDateComponents) {
         self.dateComponents = dateComponents
         self.font = NSFont.systemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
@@ -74,19 +72,19 @@ class NMDatePickerDayView: NSView {
         
     }
 
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Layout
     
-    override func resizeSubviewsWithOldSize(oldSize: NSSize) {
+    override public func resizeSubviewsWithOldSize(oldSize: NSSize) {
         let labelRect = CGRectMake(2.5, (self.bounds.size.height-self.lineHeight)/2+0.5, self.bounds.size.width-4, self.lineHeight)
         self.label.frame = CGRectIntegral(labelRect)
     }
     
 
-    override func drawRect(dirtyRect: NSRect) {
+    override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
 
         var frameRect = CGRectInset(dirtyRect, 1, 1)
@@ -135,7 +133,7 @@ class NMDatePickerDayView: NSView {
         
     }
     
-    func setSelected(state: Bool) {
+    public func setSelected(state: Bool) {
         self.selected = state
         if state == true {
             if let color = self.selectedTextColor {
@@ -151,32 +149,32 @@ class NMDatePickerDayView: NSView {
         self.setNeedsDisplayInRect(self.bounds)
     }
     
-    func setHighlighted(state: Bool) {
+    public func setHighlighted(state: Bool) {
         self.highlighted = state
         self.setNeedsDisplayInRect(self.bounds)
     }
     
     // MARK: - Events handling
     
-    override func mouseDown(theEvent: NSEvent) {
+    override public func mouseDown(theEvent: NSEvent) {
         if let action = self.daySelectedAction {
             action()
         }
     }
     
-    override func mouseEntered(theEvent: NSEvent) {
+    override public func mouseEntered(theEvent: NSEvent) {
         if let action = self.dayHighlightedAction {
             action(true)
         }
     }
     
-    override func mouseExited(theEvent: NSEvent) {
+    override public func mouseExited(theEvent: NSEvent) {
         if let action = self.dayHighlightedAction {
             action(false)
         }
     }
     
-    override func updateTrackingAreas() {
+    override public func updateTrackingAreas() {
         if self.trackingArea != nil {
             self.removeTrackingArea(self.trackingArea!)
         }
@@ -185,6 +183,4 @@ class NMDatePickerDayView: NSView {
         self.addTrackingArea(self.trackingArea!)
         
     }
-  
-    
 }

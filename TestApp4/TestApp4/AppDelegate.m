@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "TestApp4-Swift.h"
+@import NMDatePicker;
 
 @interface AppDelegate () <NMDatePickerDelegate>
 
