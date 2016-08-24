@@ -36,6 +36,8 @@ public class NMDatePickerDayView: NSView {
             self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
         }
     }
+    public var marked: Bool?
+    public var markColor: NSColor?
     
     // Callback actions
     var daySelectedAction: ((Void) -> (Void))?
@@ -46,6 +48,7 @@ public class NMDatePickerDayView: NSView {
     private var trackingArea: NSTrackingArea?
     private var label: NSTextField!
     private var lineHeight: CGFloat
+    
     
     // MARK: - Initializers
     
@@ -70,6 +73,9 @@ public class NMDatePickerDayView: NSView {
         self.label.stringValue = "\(day)"
         self.addSubview(self.label)
         
+        self.marked = false
+        
+        
     }
 
     public required init?(coder: NSCoder) {
@@ -79,19 +85,28 @@ public class NMDatePickerDayView: NSView {
     // MARK: - Layout
     
     override public func resizeSubviewsWithOldSize(oldSize: NSSize) {
+        
         let labelRect = CGRectMake(2.5, (self.bounds.size.height-self.lineHeight)/2+0.5, self.bounds.size.width-4, self.lineHeight)
         self.label.frame = CGRectIntegral(labelRect)
+        
     }
     
 
     override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
 
-        var frameRect = CGRectInset(dirtyRect, 1, 1)
-        frameRect.origin.x += 0.5
-        frameRect.origin.y += 0.5
-        let path = NSBezierPath(rect:frameRect)
+        // Rectangular selection
+//        var frameRect = CGRectInset(dirtyRect, 1, 1)
+//        frameRect.origin.x += 0.5
+//        frameRect.origin.y += 0.5
+//        let path = NSBezierPath(rect:frameRect)
+
         
+        // Circle selection
+        let width = self.bounds.height * 0.9
+        let height = self.bounds.height * 0.9
+        let pathFrame = CGRectMake((self.bounds.width - width)/2.0, (self.bounds.height - height)/2.0, width, height);
+        let path = NSBezierPath(ovalInRect: pathFrame)
         
         if self.selected == true {
             if let color = self.selectedBackgroundColor {
@@ -111,15 +126,6 @@ public class NMDatePickerDayView: NSView {
                 color.setStroke()
                 path.stroke()
             }
-        } else if NMDatePicker.isEqualDay(self.dateComponents, anotherDate: NSDate()) {
-            if let color = self.todayBackgroundColor {
-                color.setFill()
-                path.fill()
-            }
-            if let color = self.todayBorderColor {
-                color.setStroke()
-                path.stroke()
-            }
         } else {
             if let color = self.backgroundColor {
                 color.setFill()
@@ -130,6 +136,17 @@ public class NMDatePickerDayView: NSView {
                 path.stroke()
             }
         }
+        
+        
+        if self.marked == true {
+            let markerFrame = CGRectMake((self.bounds.width - 4.0)/2.0, CGRectGetMinY(self.label.frame) - 4.0, 4.0, 4.0);
+            let path = NSBezierPath(ovalInRect: markerFrame)
+            if let color = self.markColor {
+                color.setFill()
+                path.fill()
+            }
+        }
+        
         
     }
     

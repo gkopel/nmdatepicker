@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "TestApp4-Swift.h"
+//#import "TestApp4-Swift.h"
 @import NMDatePicker;
 
 @interface AppDelegate () <NMDatePickerDelegate>
@@ -31,12 +31,13 @@
     self.datePicker.font = [NSFont systemFontOfSize:13.0];
     self.datePicker.titleFont = [NSFont boldSystemFontOfSize:14.0];
     self.datePicker.textColor = [NSColor blackColor];
+    self.datePicker.todayTextColor = [NSColor purpleColor];
     self.datePicker.selectedTextColor = [NSColor whiteColor];
-    self.datePicker.todayBackgroundColor = [NSColor whiteColor];
-    self.datePicker.todayBorderColor = [NSColor blueColor];
+    self.datePicker.todayBackgroundColor = [NSColor purpleColor];
+    self.datePicker.todayBorderColor = [NSColor redColor];
     self.datePicker.highlightedBackgroundColor = [NSColor lightGrayColor];
     self.datePicker.highlightedBorderColor = [NSColor darkGrayColor];
-    self.datePicker.selectedBackgroundColor = [NSColor redColor];
+    self.datePicker.selectedBackgroundColor = [NSColor orangeColor];
     self.datePicker.selectedBorderColor = [NSColor blueColor];
     
     

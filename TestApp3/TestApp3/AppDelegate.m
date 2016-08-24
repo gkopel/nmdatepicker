@@ -34,13 +34,16 @@
     datePicker.font = [NSFont systemFontOfSize:13.0];
     datePicker.titleFont = [NSFont boldSystemFontOfSize:14.0];
     datePicker.textColor = [NSColor blackColor];
+    datePicker.todayTextColor = [NSColor purpleColor];
     datePicker.selectedTextColor = [NSColor whiteColor];
-    datePicker.todayBackgroundColor = [NSColor whiteColor];
-    datePicker.todayBorderColor = [NSColor blueColor];
+    datePicker.todayBackgroundColor = [NSColor purpleColor];
+    datePicker.todayBorderColor = [NSColor redColor];
     datePicker.highlightedBackgroundColor = [NSColor lightGrayColor];
     datePicker.highlightedBorderColor = [NSColor darkGrayColor];
     datePicker.selectedBackgroundColor = [NSColor orangeColor];
     datePicker.selectedBorderColor = [NSColor blueColor];
+    
+    
     
     
     NSView *contentView = self.window.contentView;

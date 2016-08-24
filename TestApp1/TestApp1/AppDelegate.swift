@@ -27,18 +27,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
         datePicker.delegate = self
         datePicker.autoresizingMask = NSAutoresizingMaskOptions.ViewMinYMargin
         
-        // NMDatePicker appearance properties
+        // Background color, font size
         datePicker.backgroundColor = NSColor.whiteColor()
         datePicker.font = NSFont.systemFontOfSize(13.0)
         datePicker.titleFont = NSFont.boldSystemFontOfSize(14.0)
+        
+        
+        // Text color
         datePicker.textColor = NSColor.blackColor()
+        datePicker.todayTextColor = NSColor.redColor()
         datePicker.selectedTextColor = NSColor.whiteColor()
-        datePicker.todayBackgroundColor = NSColor.whiteColor()
-        datePicker.todayBorderColor = NSColor.blueColor()
-        datePicker.highlightedBackgroundColor = NSColor.lightGrayColor()
-        datePicker.highlightedBorderColor = NSColor.darkGrayColor()
-        datePicker.selectedBackgroundColor = NSColor.orangeColor()
-        datePicker.selectedBorderColor = NSColor.blueColor()
+        
+        // Markers
+        datePicker.markColor = NSColor.darkGrayColor()
+        datePicker.todayMarkColor = NSColor.redColor()
+        datePicker.selectedMarkColor = NSColor.whiteColor()
+        
+        // Today
+        datePicker.todayBackgroundColor = NSColor.redColor()
+        datePicker.todayBorderColor = NSColor.redColor()
+        
+        // Selection
+        datePicker.selectedBackgroundColor = NSColor.lightGrayColor()
+        datePicker.selectedBorderColor = NSColor.lightGrayColor()
+        
+        // Next & previous month days
+        datePicker.nextMonthTextColor = NSColor.grayColor()
+        datePicker.previousMonthTextColor = NSColor.grayColor();
+        
+        
+        
+        
+        
+        // 'Mouse-over' highlight
+        datePicker.highlightedBackgroundColor = NSColor(white: 0.95, alpha: 1.0)
+        datePicker.highlightedBorderColor = NSColor(white: 0.95, alpha: 1.0)
+        
+        
         
         contentView!.addSubview(datePicker)
         
@@ -62,7 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     
     
     @IBAction func markDateAction(sender: AnyObject) {
-        self.datePicker.markDate(self.dateMarker.dateValue, backgroundColor: NSColor.purpleColor(), borderColor: NSColor.redColor(), textColor: NSColor.whiteColor())
+        self.datePicker.markDate(self.dateMarker.dateValue)
     }
     
     @IBAction func unmarkDateAction(sender: AnyObject) {

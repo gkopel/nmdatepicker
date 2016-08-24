@@ -12,7 +12,7 @@ NSDatePicker replacement allowing for appearance customisation.
 - custom date picker size,
 - custom font size and colour,
 - custom colours for date picker background, selected day, highlighted day.
-- particular days can be marked with custom background, border and text colour.
+- particular days can be marked with a bullet symbol.
 - can be created in code or in Interface Builder
 
 ## Installation

@@ -30,7 +30,7 @@ public class NMDatePicker: NSView {
         self.font = NSFont.systemFontOfSize(12.0)
         self.titleFont = NSFont.boldSystemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
-        self.markedDates = [NSDate: [String: NSColor]]()
+        self.markedDates = [NSDate]()
         super.init(frame: frame)
         configurePicker()
     }
@@ -44,15 +44,15 @@ public class NMDatePicker: NSView {
         self.font = NSFont.systemFontOfSize(12.0)
         self.titleFont = NSFont.boldSystemFontOfSize(12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
-        self.markedDates = [NSDate: [String: NSColor]]()
+        self.markedDates = [NSDate]()
         super.init(coder: coder)
         configurePicker()
     }
 
     
     func configurePicker() {
-        self.calendar.firstWeekday = self.firstDayOfWeek
-        self.firstDayComponents = self.firstDayOfMonthForDate(dateValue)
+        calendar.firstWeekday = firstDayOfWeek
+        firstDayComponents = firstDayOfMonthForDate(dateValue)
         configureDateFormatter()
         configureWeekdays()
         configureViewAppearance()
@@ -81,12 +81,17 @@ public class NMDatePicker: NSView {
     }
     public var textColor: NSColor? {
         didSet {
-            configureViewAppearance()
+            updateDaysView()
+        }
+    }
+    public var todayTextColor: NSColor? {
+        didSet {
+            updateDaysView()
         }
     }
     public var selectedTextColor: NSColor? {
         didSet {
-            configureViewAppearance()
+            updateDaysView()
         }
     }
     public var selectedBackgroundColor: NSColor? {
@@ -119,19 +124,48 @@ public class NMDatePicker: NSView {
             updateDaysView()
         }
     }
+    public var nextMonthTextColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    public var previousMonthTextColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    public var markColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    
+    public var todayMarkColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    
+    public var selectedMarkColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
     
     // MARK: - public methods
     
     
-    public func markDate(date: NSDate, backgroundColor: NSColor, borderColor: NSColor, textColor: NSColor) {
-        let markedDate = ["backgroundColor": backgroundColor, "borderColor": borderColor, "textColor": textColor]
-        self.markedDates[date] = markedDate
+    public func markDate(date: NSDate) {
+        self.markedDates.append(date)
         updateDaysView()
     }
     
     public func unmarkDate(date: NSDate) {
-        self.markedDates[date] = nil
-        updateDaysView()
+        if let index = self.markedDates.indexOf(date) {
+            self.markedDates.removeAtIndex(index)
+            updateDaysView()
+        }
+        
     }
     
     public func unmarkAllDates() {
@@ -159,7 +193,7 @@ public class NMDatePicker: NSView {
     private var currentHeight: Int
     private var lineHeight: CGFloat
     private var dateFormatter: NSDateFormatter?
-    private var markedDates: [ NSDate: [ String: NSColor ] ]
+    private var markedDates: [ NSDate ]
 
     
     
@@ -174,14 +208,14 @@ public class NMDatePicker: NSView {
         
     }
     
-    public func monthForwardAction(sender: NSButton) {
+    public func monthForwardAction(sender: NSButton?) {
         self.firstDayComponents = oneMonthLaterDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
         
     }
     
-    public func monthBackAction(sender: NSButton) {
+    public func monthBackAction(sender: NSButton?) {
         self.firstDayComponents = oneMonthEarlierDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
@@ -323,16 +357,79 @@ public class NMDatePicker: NSView {
         // Create new set of day views
         let daysInMonth = daysCountInMonthForDay(self.firstDayComponents)
         var dateComponents = self.firstDayComponents
+        let firstWkDay = self.firstDayComponents.weekday
+        
+        
+        // Previous month
+        var visibledaysPreviousMonth = firstWkDay - self.firstDayOfWeek
+        if visibledaysPreviousMonth < 0 {
+            visibledaysPreviousMonth += 7
+        }
+        visibledaysPreviousMonth *= -1
+        for index in visibledaysPreviousMonth ..< 0 {
+            let dayComponents = dayByAddingDays(index, fromDate: firstDayComponents)
+            let day = NMDatePickerDayView(dateComponents: dayComponents)
+            
+            day.font = font
+            day.textColor = self.previousMonthTextColor
+            day.highlightedBorderColor = self.highlightedBorderColor
+            day.highlightedBackgroundColor = self.highlightedBackgroundColor
+            day.markColor = self.markColor
+            
+            // Highlighted day callback action
+            day.dayHighlightedAction = {
+                (flag: Bool) -> () in
+                day.setHighlighted(flag)
+            }
+            
+            // Selected day callback action
+            day.daySelectedAction = {
+                () -> () in
+                self.monthBackAction(nil)
+                let dateComponents = day.dateComponents
+                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                dateComponents.hour = dateValueComponents.hour
+                dateComponents.minute = dateValueComponents.minute
+                dateComponents.second = dateValueComponents.second
+                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                    self.dateValue = dateValue
+                    self.updateDaysView()
+                    if let delegate = self.delegate {
+                        delegate.nmDatePicker(self, selectedDate: self.dateValue)
+                    }
+                }
+                
+            }
+            
+            for markedDate in self.markedDates {
+                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: markedDate) {
+                    day.marked = true
+                }
+            }
+            
+            self.days.append(day)
+            self.addSubview(day)
+        }
+        
+        
+        // Current month
         for _ in 0 ..< daysInMonth {
             let day = NMDatePickerDayView(dateComponents: dateComponents)
             day.backgroundColor = self.backgroundColor
             
+            
             day.highlightedBorderColor = self.highlightedBorderColor
             day.highlightedBackgroundColor = self.highlightedBackgroundColor
-            day.todayBackgroundColor = self.todayBackgroundColor
             day.todayBorderColor = self.todayBorderColor
             day.font = self.font
             day.textColor = self.textColor
+            day.markColor = self.markColor
+            
+            
+            if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: NSDate()) {
+                day.textColor = self.todayTextColor
+                day.markColor = self.todayMarkColor
+            }
             
             
             // Selected day callback action
@@ -358,37 +455,90 @@ public class NMDatePicker: NSView {
                 day.setHighlighted(flag)
             }
             
-            
-            
-            
-            for markedDate in self.markedDates.keys {
+            for markedDate in self.markedDates {
                 if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: markedDate) {
-                    if let markedDateParams = self.markedDates[markedDate] {
-                        day.selectedBackgroundColor = markedDateParams["backgroundColor"]
-                        day.selectedBorderColor = markedDateParams["borderColor"]
-                        day.selectedTextColor = markedDateParams["textColor"]
-                        day.setSelected(true)
-                    }
-                    
+                    day.marked = true
                 }
             }
             
             
             if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: self.dateValue) {
-                day.selectedBackgroundColor = self.selectedBackgroundColor
-                day.selectedBorderColor = self.selectedBorderColor
+                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: NSDate()) {
+                    day.selectedBackgroundColor = self.todayBackgroundColor
+                    day.selectedBorderColor = self.todayBorderColor
+                } else {
+                    day.selectedBackgroundColor = self.selectedBackgroundColor
+                    day.selectedBorderColor = self.selectedBorderColor
+                }
+                
                 day.selectedTextColor = self.selectedTextColor
+                day.markColor = self.selectedMarkColor
                 day.setSelected(true)
             }
-            
             
 
             self.days.append(day)
             self.addSubview(day)
-            dateComponents = nextDayForDay(dateComponents)
+            // dateComponents = nextDayForDay(dateComponents)
+            dateComponents = dayByAddingDays(1, fromDate: dateComponents)
+        }
+        
+        
+        
+        // Next month
+        var visibleDaysNextMonth = self.firstDayOfWeek + 7 - dateComponents.weekday
+        if visibleDaysNextMonth > 7 {
+            visibleDaysNextMonth -= 7
+        }
+        for _ in 1 ... visibleDaysNextMonth {
+            let day = NMDatePickerDayView(dateComponents: dateComponents)
+            
+            day.font = font
+            day.textColor = self.nextMonthTextColor
+            day.highlightedBorderColor = self.highlightedBorderColor
+            day.highlightedBackgroundColor = self.highlightedBackgroundColor
+            day.markColor = self.markColor
+            
+            // Highlighted day callback action
+            day.dayHighlightedAction = {
+                (flag: Bool) -> () in
+                day.setHighlighted(flag)
+            }
+            
+            
+            // Selected day callback action
+            day.daySelectedAction = {
+                () -> () in
+                self.monthForwardAction(nil)
+                let dateComponents = day.dateComponents
+                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                dateComponents.hour = dateValueComponents.hour
+                dateComponents.minute = dateValueComponents.minute
+                dateComponents.second = dateValueComponents.second
+                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                    self.dateValue = dateValue
+                    self.updateDaysView()
+                    if let delegate = self.delegate {
+                        delegate.nmDatePicker(self, selectedDate: self.dateValue)
+                    }
+                }
+
+            }
+            
+            
+            for markedDate in self.markedDates {
+                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: markedDate) {
+                    day.marked = true
+                }
+            }
+            
+            
+            self.days.append(day)
+            self.addSubview(day)
+            dateComponents = dayByAddingDays(1, fromDate: dateComponents)
         }
 
-        self.doLayout()
+        doLayout()
     }
     
     public class func lineHeightForFont(font: NSFont) -> CGFloat {
@@ -446,16 +596,16 @@ public class NMDatePicker: NSView {
         return days.length
     }
     
-    private func nextDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
-        let nextDateComponents = NSDateComponents()
-        nextDateComponents.day = dateComponents.day + 1
-        nextDateComponents.month = dateComponents.month
-        nextDateComponents.year = dateComponents.year
-        nextDateComponents.weekday = dateComponents.weekday + 1
-        if nextDateComponents.weekday > 7 {
-            nextDateComponents.weekday -= 7
-        }
-        return nextDateComponents
+    private func dayByAddingDays(days: Int, fromDate anotherDate: NSDateComponents) -> NSDateComponents {
+        
+        let dateComponents = NSDateComponents()
+        
+        dateComponents.day = anotherDate.day + days
+        dateComponents.month = anotherDate.month
+        dateComponents.year = anotherDate.year
+        
+        let day = self.calendar.dateFromComponents(dateComponents)!
+        return self.calendar.components(self.dateUnitMask, fromDate: day)
     }
 
     
