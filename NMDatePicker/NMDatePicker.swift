@@ -9,42 +9,42 @@ import Cocoa
 
 @objc public protocol NMDatePickerDelegate {
     /// This method notifies about the date selected in the date picker. (Required)
-    func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate)
+    func nmDatePicker(_ datePicker: NMDatePicker, selectedDate: Date)
     
     /// Optional method that allows to adjust date picker height
     /// when the number of rows is changing between months.
-    optional func nmDatePicker(datePicker: NMDatePicker, newSize: NSSize)
+    @objc optional func nmDatePicker(_ datePicker: NMDatePicker, newSize: NSSize)
 }
 
 /// Custom date picker view.
-public class NMDatePicker: NSView {
+open class NMDatePicker: NSView {
     
     
     // MARK: - Initializers
-    public init(frame: NSRect, dateValue: NSDate) {
+    public init(frame: NSRect, dateValue: Date) {
         self.dateValue = dateValue
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
         self.monthForwardButton = NSButton(frame: NSZeroRect)
         self.currentHeight = 0
-        self.font = NSFont.systemFontOfSize(12.0)
-        self.titleFont = NSFont.boldSystemFontOfSize(12.0)
+        self.font = NSFont.systemFont(ofSize: 12.0)
+        self.titleFont = NSFont.boldSystemFont(ofSize: 12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
-        self.markedDates = [NSDate]()
+        self.markedDates = [Date]()
         super.init(frame: frame)
         configurePicker()
     }
     
     public required init?(coder: NSCoder) {
-        self.dateValue = NSDate()
+        self.dateValue = Date()
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
         self.monthForwardButton = NSButton(frame: NSZeroRect)
         self.currentHeight = 0
-        self.font = NSFont.systemFontOfSize(12.0)
-        self.titleFont = NSFont.boldSystemFontOfSize(12.0)
+        self.font = NSFont.systemFont(ofSize: 12.0)
+        self.titleFont = NSFont.boldSystemFont(ofSize: 12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
-        self.markedDates = [NSDate]()
+        self.markedDates = [Date]()
         super.init(coder: coder)
         configurePicker()
     }
@@ -60,93 +60,93 @@ public class NMDatePicker: NSView {
     }
     
     // MARK: - Public properties
-    public var delegate: NMDatePickerDelegate?
-    public var dateValue: NSDate
-    public let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
-    public var backgroundColor: NSColor? {
+    open var delegate: NMDatePickerDelegate?
+    open var dateValue: Date
+    open let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
+    open var backgroundColor: NSColor? {
         didSet {
-            self.setNeedsDisplayInRect(self.bounds)
+            self.setNeedsDisplay(self.bounds)
         }
     }
-    public var titleFont: NSFont {
+    open var titleFont: NSFont {
         didSet {
             configureViewAppearance()
         }
     }
-    public var font: NSFont {
+    open var font: NSFont {
         didSet {
             self.lineHeight = NMDatePicker.lineHeightForFont(font)
             configureViewAppearance()
         }
     }
-    public var textColor: NSColor? {
+    open var textColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var todayTextColor: NSColor? {
+    open var todayTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var selectedTextColor: NSColor? {
+    open var selectedTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var selectedBackgroundColor: NSColor? {
+    open var selectedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var selectedBorderColor: NSColor? {
+    open var selectedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var highlightedBackgroundColor: NSColor? {
+    open var highlightedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var highlightedBorderColor: NSColor? {
+    open var highlightedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var todayBackgroundColor: NSColor? {
+    open var todayBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var todayBorderColor: NSColor? {
+    open var todayBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var nextMonthTextColor: NSColor? {
+    open var nextMonthTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var previousMonthTextColor: NSColor? {
+    open var previousMonthTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    public var markColor: NSColor? {
-        didSet {
-            updateDaysView()
-        }
-    }
-    
-    public var todayMarkColor: NSColor? {
+    open var markColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
     
-    public var selectedMarkColor: NSColor? {
+    open var todayMarkColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    
+    open var selectedMarkColor: NSColor? {
         didSet {
             updateDaysView()
         }
@@ -155,20 +155,20 @@ public class NMDatePicker: NSView {
     // MARK: - public methods
     
     
-    public func markDate(date: NSDate) {
+    open func markDate(_ date: Date) {
         self.markedDates.append(date)
         updateDaysView()
     }
     
-    public func unmarkDate(date: NSDate) {
-        if let index = self.markedDates.indexOf(date) {
-            self.markedDates.removeAtIndex(index)
+    open func unmarkDate(_ date: Date) {
+        if let index = self.markedDates.index(of: date) {
+            self.markedDates.remove(at: index)
             updateDaysView()
         }
         
     }
     
-    public func unmarkAllDates() {
+    open func unmarkAllDates() {
         self.markedDates.removeAll()
         updateDaysView()
     }
@@ -176,31 +176,31 @@ public class NMDatePicker: NSView {
     
     
     // MARK: - Private properties
-    private let calendar = NSCalendar.currentCalendar()
-    private let dateUnitMask: NSCalendarUnit =  [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Weekday]
-    private let dateTimeUnitMask: NSCalendarUnit =  [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Second, NSCalendarUnit.Weekday]
-    private var firstDayComponents: NSDateComponents!
+    fileprivate var calendar = Calendar.current
+    fileprivate let dateUnitMask: NSCalendar.Unit =  [NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.day, NSCalendar.Unit.weekday]
+    fileprivate let dateTimeUnitMask: NSCalendar.Unit =  [NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.day, NSCalendar.Unit.hour, NSCalendar.Unit.minute, NSCalendar.Unit.second, NSCalendar.Unit.weekday]
+    fileprivate var firstDayComponents: DateComponents!
     
-    override public var flipped: Bool { return true }
+    override open var isFlipped: Bool { return true }
 
-    private(set) public var currentMonthLabel: NSTextField!
-    private(set) public var monthBackButton: NSButton!
-    private(set) public var monthForwardButton: NSButton!
+    fileprivate(set) open var currentMonthLabel: NSTextField!
+    fileprivate(set) open var monthBackButton: NSButton!
+    fileprivate(set) open var monthForwardButton: NSButton!
 
-    private var weekdays: [String] = []
-    private var weekdayLabels: [NSTextField] = []
-    private var days: [NMDatePickerDayView] = []
-    private var currentHeight: Int
-    private var lineHeight: CGFloat
-    private var dateFormatter: NSDateFormatter?
-    private var markedDates: [ NSDate ]
+    fileprivate var weekdays: [String] = []
+    fileprivate var weekdayLabels: [NSTextField] = []
+    fileprivate var days: [NMDatePickerDayView] = []
+    fileprivate var currentHeight: Int
+    fileprivate var lineHeight: CGFloat
+    fileprivate var dateFormatter: DateFormatter?
+    fileprivate var markedDates: [ Date ]
 
     
     
     // MARK: - Layout
 
-    override public func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override open func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
         if let color = self.backgroundColor {
             color.setFill()
             NSRectFill(dirtyRect)
@@ -208,20 +208,20 @@ public class NMDatePicker: NSView {
         
     }
     
-    public func monthForwardAction(sender: NSButton?) {
+    open func monthForwardAction(_ sender: NSButton?) {
         self.firstDayComponents = oneMonthLaterDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
         
     }
     
-    public func monthBackAction(sender: NSButton?) {
+    open func monthBackAction(_ sender: NSButton?) {
         self.firstDayComponents = oneMonthEarlierDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
     }
     
-    public func displayViewForDate(date: NSDate) {
+    open func displayViewForDate(_ date: Date) {
         self.firstDayComponents = firstDayOfMonthForDate(date)
         self.dateValue = date
         updateCurrentMonthLabel()
@@ -262,7 +262,7 @@ public class NMDatePicker: NSView {
                 nextLine = false
                 originY += dayViewHeight
             }
-            let weekday = dayView.dateComponents.weekday
+            let weekday = dayView.dateComponents.weekday!
             let column = columnForWeekday(weekday)
             var originX: Int = dayViewWidth * column
             dayView.frame = NSMakeRect(CGFloat(originX), CGFloat(originY), CGFloat(dayViewWidth), CGFloat(dayViewHeight))
@@ -287,30 +287,30 @@ public class NMDatePicker: NSView {
     }
     
     
-    private func configureViewAppearance() {
+    fileprivate func configureViewAppearance() {
         updateCurrentMonthLabel()
         
         // Current month and buttons
-        self.currentMonthLabel.editable = false
-        self.currentMonthLabel.backgroundColor = NSColor.clearColor()
-        self.currentMonthLabel.bordered = false
-        self.currentMonthLabel.alignment = NSTextAlignment.Center
+        self.currentMonthLabel.isEditable = false
+        self.currentMonthLabel.backgroundColor = NSColor.clear
+        self.currentMonthLabel.isBordered = false
+        self.currentMonthLabel.alignment = NSTextAlignment.center
         self.currentMonthLabel.font = self.titleFont
         self.currentMonthLabel.textColor = self.textColor
         self.addSubview(self.currentMonthLabel)
         
         self.monthBackButton.title = "<"
-        self.monthBackButton.alignment = NSTextAlignment.Center
+        self.monthBackButton.alignment = NSTextAlignment.center
         let backBtnCell = self.monthBackButton.cell as! NSButtonCell
-        backBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
+        backBtnCell.bezelStyle = NSBezelStyle.circular
         self.monthBackButton.target = self
         self.monthBackButton.action = #selector(NMDatePicker.monthBackAction(_:))
         self.addSubview(self.monthBackButton)
         
         self.monthForwardButton.title = ">"
-        self.monthForwardButton.alignment = NSTextAlignment.Center
+        self.monthForwardButton.alignment = NSTextAlignment.center
         let forwardBtnCell = self.monthForwardButton.cell as! NSButtonCell
-        forwardBtnCell.bezelStyle = NSBezelStyle.CircularBezelStyle
+        forwardBtnCell.bezelStyle = NSBezelStyle.circular
         self.monthForwardButton.target = self
         self.monthForwardButton.action = #selector(NMDatePicker.monthForwardAction(_:))
         self.addSubview(self.monthForwardButton)
@@ -319,16 +319,16 @@ public class NMDatePicker: NSView {
         for weekdayLabel in self.weekdayLabels {
             weekdayLabel.removeFromSuperview()
         }
-        self.weekdayLabels.removeAll(keepCapacity: true)
+        self.weekdayLabels.removeAll(keepingCapacity: true)
         for i in 0 ..< 7 {
             let weekday = weekdayNameForColumn(i)
             let weekdayLabel = NSTextField(frame: NSZeroRect)
             weekdayLabel.font = self.font
             weekdayLabel.textColor = self.textColor
-            weekdayLabel.editable = false
-            weekdayLabel.backgroundColor = NSColor.clearColor()
-            weekdayLabel.bordered = false
-            weekdayLabel.alignment = NSTextAlignment.Center
+            weekdayLabel.isEditable = false
+            weekdayLabel.backgroundColor = NSColor.clear
+            weekdayLabel.isBordered = false
+            weekdayLabel.alignment = NSTextAlignment.center
             weekdayLabel.stringValue = weekday
             
             self.weekdayLabels.append(weekdayLabel)
@@ -340,19 +340,19 @@ public class NMDatePicker: NSView {
     }
     
     
-    private func updateCurrentMonthLabel() {
+    fileprivate func updateCurrentMonthLabel() {
         self.currentMonthLabel.stringValue = monthAndYearForDay(self.firstDayComponents)
         
     }
 
     
     
-    private func updateDaysView() {
+    fileprivate func updateDaysView() {
         // Clean current view
         for day: NMDatePickerDayView in self.days {
             day.removeFromSuperview()
         }
-        self.days.removeAll(keepCapacity: true)
+        self.days.removeAll(keepingCapacity: true)
         
         // Create new set of day views
         let daysInMonth = daysCountInMonthForDay(self.firstDayComponents)
@@ -361,7 +361,7 @@ public class NMDatePicker: NSView {
         
         
         // Previous month
-        var visibledaysPreviousMonth = firstWkDay - self.firstDayOfWeek
+        var visibledaysPreviousMonth = firstWkDay! - self.firstDayOfWeek
         if visibledaysPreviousMonth < 0 {
             visibledaysPreviousMonth += 7
         }
@@ -386,12 +386,12 @@ public class NMDatePicker: NSView {
             day.daySelectedAction = {
                 () -> () in
                 self.monthBackAction(nil)
-                let dateComponents = day.dateComponents
-                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                var dateComponents = day.dateComponents
+                let dateValueComponents = (self.calendar as NSCalendar).components(self.dateTimeUnitMask, from: self.dateValue)
                 dateComponents.hour = dateValueComponents.hour
                 dateComponents.minute = dateValueComponents.minute
                 dateComponents.second = dateValueComponents.second
-                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                if let dateValue = self.calendar.date(from: dateComponents) {
                     self.dateValue = dateValue
                     self.updateDaysView()
                     if let delegate = self.delegate {
@@ -414,7 +414,7 @@ public class NMDatePicker: NSView {
         
         // Current month
         for _ in 0 ..< daysInMonth {
-            let day = NMDatePickerDayView(dateComponents: dateComponents)
+            let day = NMDatePickerDayView(dateComponents: dateComponents!)
             day.backgroundColor = self.backgroundColor
             
             
@@ -426,7 +426,7 @@ public class NMDatePicker: NSView {
             day.markColor = self.markColor
             
             
-            if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: NSDate()) {
+            if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: Date()) {
                 day.textColor = self.todayTextColor
                 day.markColor = self.todayMarkColor
             }
@@ -435,12 +435,12 @@ public class NMDatePicker: NSView {
             // Selected day callback action
             day.daySelectedAction = {
                 () -> () in
-                let dateComponents = day.dateComponents
-                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                var dateComponents = day.dateComponents
+                let dateValueComponents = (self.calendar as NSCalendar).components(self.dateTimeUnitMask, from: self.dateValue)
                 dateComponents.hour = dateValueComponents.hour
                 dateComponents.minute = dateValueComponents.minute
                 dateComponents.second = dateValueComponents.second
-                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                if let dateValue = self.calendar.date(from: dateComponents) {
                     self.dateValue = dateValue
                     self.updateDaysView()
                     if let delegate = self.delegate {
@@ -463,7 +463,7 @@ public class NMDatePicker: NSView {
             
             
             if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: self.dateValue) {
-                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: NSDate()) {
+                if NMDatePicker.isEqualDay(day.dateComponents, anotherDate: Date()) {
                     day.selectedBackgroundColor = self.todayBackgroundColor
                     day.selectedBorderColor = self.todayBorderColor
                 } else {
@@ -480,18 +480,18 @@ public class NMDatePicker: NSView {
             self.days.append(day)
             self.addSubview(day)
             // dateComponents = nextDayForDay(dateComponents)
-            dateComponents = dayByAddingDays(1, fromDate: dateComponents)
+            dateComponents = dayByAddingDays(1, fromDate: dateComponents!)
         }
         
         
         
         // Next month
-        var visibleDaysNextMonth = self.firstDayOfWeek + 7 - dateComponents.weekday
+        var visibleDaysNextMonth = self.firstDayOfWeek + 7 - (dateComponents?.weekday!)!
         if visibleDaysNextMonth > 7 {
             visibleDaysNextMonth -= 7
         }
         for _ in 1 ... visibleDaysNextMonth {
-            let day = NMDatePickerDayView(dateComponents: dateComponents)
+            let day = NMDatePickerDayView(dateComponents: dateComponents!)
             
             day.font = font
             day.textColor = self.nextMonthTextColor
@@ -510,12 +510,12 @@ public class NMDatePicker: NSView {
             day.daySelectedAction = {
                 () -> () in
                 self.monthForwardAction(nil)
-                let dateComponents = day.dateComponents
-                let dateValueComponents = self.calendar.components(self.dateTimeUnitMask, fromDate: self.dateValue)
+                var dateComponents = day.dateComponents
+                let dateValueComponents = (self.calendar as NSCalendar).components(self.dateTimeUnitMask, from: self.dateValue)
                 dateComponents.hour = dateValueComponents.hour
                 dateComponents.minute = dateValueComponents.minute
                 dateComponents.second = dateValueComponents.second
-                if let dateValue = self.calendar.dateFromComponents(dateComponents) {
+                if let dateValue = self.calendar.date(from: dateComponents) {
                     self.dateValue = dateValue
                     self.updateDaysView()
                     if let delegate = self.delegate {
@@ -535,28 +535,28 @@ public class NMDatePicker: NSView {
             
             self.days.append(day)
             self.addSubview(day)
-            dateComponents = dayByAddingDays(1, fromDate: dateComponents)
+            dateComponents = dayByAddingDays(1, fromDate: dateComponents!)
         }
 
         doLayout()
     }
     
-    public class func lineHeightForFont(font: NSFont) -> CGFloat {
-        let attribs = NSDictionary(object: font, forKey: NSFontAttributeName)
-        let size = "Aa".sizeWithAttributes(attribs as? [String : AnyObject])
+    open class func lineHeightForFont(_ font: NSFont) -> CGFloat {
+        let attribs = NSDictionary(object: font, forKey: NSFontAttributeName as NSCopying)
+        let size = "Aa".size(withAttributes: attribs as? [String : AnyObject])
         return round(size.height)
     }
     
-    override public func setFrameSize(newSize: NSSize) {
+    override open func setFrameSize(_ newSize: NSSize) {
         super.setFrameSize(newSize)
         doLayout()
     }
     
     // MARK: - Date calculations
     
-    class func isEqualDay(dateComponents: NSDateComponents, anotherDate: NSDate) -> Bool {
-        let calendar = NSCalendar.currentCalendar()
-        let anotherDateComponents = calendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day], fromDate:anotherDate)
+    class func isEqualDay(_ dateComponents: DateComponents, anotherDate: Date) -> Bool {
+        let calendar = Calendar.current
+        let anotherDateComponents = (calendar as NSCalendar).components([NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.day], from:anotherDate)
         
         if dateComponents.day == anotherDateComponents.day && dateComponents.month == anotherDateComponents.month
             && dateComponents.year == anotherDateComponents.year {
@@ -566,108 +566,112 @@ public class NMDatePicker: NSView {
         }
     }
     
-    private func monthAndYearForDay(dateComponents: NSDateComponents) -> String {
+    fileprivate func monthAndYearForDay(_ dateComponents: DateComponents) -> String {
         let year = dateComponents.year
         let month = dateComponents.month
         let months = self.dateFormatter!.standaloneMonthSymbols
-        let monthSymbol = months[month-1] as NSString
         
-        return "\(monthSymbol) \(year)"
+        if let _year = year, let _month = month, let _months = months {
+            let monthSymbol = _months[_month-1]
+            return "\(monthSymbol) \(_year)"
+        } else {
+            return "--"
+        }
     }
     
-    private func firstDayOfMonthForDate(date: NSDate) -> NSDateComponents {
-        let dateComponents = self.calendar.components(self.dateUnitMask, fromDate: date)
-        let weekday = dateComponents.weekday
-        let day = dateComponents.day
+    fileprivate func firstDayOfMonthForDate(_ date: Date) -> DateComponents {
+        var dateComponents = (self.calendar as NSCalendar).components(self.dateUnitMask, from: date)
+        let weekday = dateComponents.weekday!
+        let day = dateComponents.day!
         let weekOffset = day % 7
         
         dateComponents.day = 1
         dateComponents.weekday = weekday - weekOffset + 1
-        if dateComponents.weekday < 0 {
-            dateComponents.weekday += 7
+        if dateComponents.weekday! < 0 {
+            dateComponents.weekday! += 7
         }
         
         return dateComponents
     }
     
-    private func daysCountInMonthForDay(dateComponents: NSDateComponents) -> Int {
-        let date = self.calendar.dateFromComponents(dateComponents)!
-        let days = self.calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
+    fileprivate func daysCountInMonthForDay(_ dateComponents: DateComponents) -> Int {
+        let date = self.calendar.date(from: dateComponents)!
+        let days = (self.calendar as NSCalendar).range(of: NSCalendar.Unit.day, in: NSCalendar.Unit.month, for: date)
         return days.length
     }
     
-    private func dayByAddingDays(days: Int, fromDate anotherDate: NSDateComponents) -> NSDateComponents {
+    fileprivate func dayByAddingDays(_ days: Int, fromDate anotherDate: DateComponents) -> DateComponents {
         
-        let dateComponents = NSDateComponents()
+        var dateComponents = DateComponents()
         
-        dateComponents.day = anotherDate.day + days
+        dateComponents.day = anotherDate.day! + days
         dateComponents.month = anotherDate.month
         dateComponents.year = anotherDate.year
         
-        let day = self.calendar.dateFromComponents(dateComponents)!
-        return self.calendar.components(self.dateUnitMask, fromDate: day)
+        let day = self.calendar.date(from: dateComponents)!
+        return (self.calendar as NSCalendar).components(self.dateUnitMask, from: day)
     }
 
     
-    private func oneMonthLaterDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
-        let newDateComponents = NSDateComponents()
+    fileprivate func oneMonthLaterDayForDay(_ dateComponents: DateComponents) -> DateComponents {
+        var newDateComponents = DateComponents()
         newDateComponents.day = dateComponents.day
-        newDateComponents.month = dateComponents.month + 1
+        newDateComponents.month = dateComponents.month! + 1
         newDateComponents.year = dateComponents.year
-        let oneMonthLaterDay = self.calendar.dateFromComponents(newDateComponents)!
-        return self.calendar.components(self.dateUnitMask, fromDate: oneMonthLaterDay)
+        let oneMonthLaterDay = self.calendar.date(from: newDateComponents)!
+        return (self.calendar as NSCalendar).components(self.dateUnitMask, from: oneMonthLaterDay)
     }
     
-    private func oneMonthEarlierDayForDay(dateComponents: NSDateComponents) -> NSDateComponents {
-        let newDateComponents = NSDateComponents()
+    fileprivate func oneMonthEarlierDayForDay(_ dateComponents: DateComponents) -> DateComponents {
+        var newDateComponents = DateComponents()
         newDateComponents.day = dateComponents.day
-        newDateComponents.month = dateComponents.month - 1
+        newDateComponents.month = dateComponents.month! - 1
         newDateComponents.year = dateComponents.year
-        let oneMonthLaterDay = self.calendar.dateFromComponents(newDateComponents)!
-        return self.calendar.components(self.dateUnitMask, fromDate: oneMonthLaterDay)
+        let oneMonthLaterDay = self.calendar.date(from: newDateComponents)!
+        return (self.calendar as NSCalendar).components(self.dateUnitMask, from: oneMonthLaterDay)
     }
     
     
-    private func weekdayNameForColumn(column: Int) -> String {
+    fileprivate func weekdayNameForColumn(_ column: Int) -> String {
         var index = column + self.firstDayOfWeek - 1
         if index >= 7 { index -= 7 }
         return self.weekdays[index]
     }
     
-    private func columnForWeekday(weekday: Int) -> Int {
+    fileprivate func columnForWeekday(_ weekday: Int) -> Int {
         var column = weekday - self.firstDayOfWeek
         if column < 0 { column += 7 }
         return column
     }
 
     
-    private func configureWeekdays() {
+    fileprivate func configureWeekdays() {
         if  let dateFormatter = self.dateFormatter {
             dateFormatter.dateFormat = "EEEEE"
-            let oneDayInterval = NSTimeInterval(60*60*24)
-            let now = NSDate()
-            let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-            let components = calendar?.components([NSCalendarUnit.Year, NSCalendarUnit.Month], fromDate: now)
-            let dayComponents = NSDateComponents()
+            let oneDayInterval = TimeInterval(60*60*24)
+            let now = Date()
+            let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+            let components = (calendar as NSCalendar?)?.components([NSCalendar.Unit.year, NSCalendar.Unit.month], from: now)
+            var dayComponents = DateComponents()
             dayComponents.hour = 12
             dayComponents.weekday = 1
             dayComponents.weekdayOrdinal = 1
             dayComponents.month = (components?.month)!
             dayComponents.year = (components?.year)!
-            var day = calendar?.dateFromComponents(dayComponents)
+            var day = calendar.date(from: dayComponents)
             for _ in 0 ..< 7 {
-                let daySymbol = dateFormatter.stringFromDate(day!)
+                let daySymbol = dateFormatter.string(from: day!)
                 self.weekdays.append(daySymbol)
-                day = day?.dateByAddingTimeInterval(oneDayInterval)
+                day = day?.addingTimeInterval(oneDayInterval)
             }
             
         }
     }
     
     
-    private func configureDateFormatter() {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale.currentLocale()
+    fileprivate func configureDateFormatter() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
         self.dateFormatter = dateFormatter
     }
 }

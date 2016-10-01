@@ -18,54 +18,54 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
     @IBOutlet weak var datePicker: NMDatePicker!
 
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
-        let now = NSDate()
-        updateDateLabel(now)
+    func applicationDidFinishLaunching(_ aNotification: Notification)  {
+        let now = Date()
+        updateDateLabel(date: now)
         
-        self.datePicker.dateValue = now
+        self.datePicker.dateValue = now as Date
         self.datePicker.delegate = self
         
         // NMDatePicker appearance properties
-        datePicker.backgroundColor = NSColor.whiteColor()
-        datePicker.font = NSFont.systemFontOfSize(13.0)
-        datePicker.titleFont = NSFont.boldSystemFontOfSize(14.0)
-        datePicker.textColor = NSColor.blackColor()
-        datePicker.todayTextColor = NSColor.blueColor()
-        datePicker.selectedTextColor = NSColor.whiteColor()
-        datePicker.todayBackgroundColor = NSColor.blueColor()
-        datePicker.todayBorderColor = NSColor.blueColor()
-        datePicker.highlightedBackgroundColor = NSColor.lightGrayColor()
-        datePicker.highlightedBorderColor = NSColor.darkGrayColor()
-        datePicker.selectedBackgroundColor = NSColor.orangeColor()
-        datePicker.selectedBorderColor = NSColor.blueColor()
-        
+        datePicker.backgroundColor = NSColor.white
+        datePicker.font = NSFont.systemFont(ofSize: 13.0)
+        datePicker.titleFont = NSFont.boldSystemFont(ofSize: 14.0)
+        datePicker.textColor = NSColor.black
+        datePicker.todayTextColor = NSColor.blue
+        datePicker.selectedTextColor = NSColor.white
+        datePicker.todayBackgroundColor = NSColor.blue
+        datePicker.todayBorderColor = NSColor.blue
+        datePicker.highlightedBackgroundColor = NSColor.lightGray
+        datePicker.highlightedBorderColor = NSColor.darkGray
+        datePicker.selectedBackgroundColor = NSColor.orange
+        datePicker.selectedBorderColor = NSColor.blue
         
     }
     
     @IBAction func showTodayAction(sender: AnyObject) {
-        self.datePicker.displayViewForDate(NSDate())
+        self.datePicker.displayViewForDate(NSDate() as Date)
     }
     
-    class func shortDateForDate(date: NSDate) -> NSString {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale.currentLocale()
+    class func shortDateForDate(date: Date) -> NSString {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = NSLocale.current
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        return dateFormatter.stringFromDate(date)
+       // return dateFormatter.string(from: date as Date) as (Date)
+        return dateFormatter.string(from: date) as NSString
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
     }
     
-    func updateDateLabel(date: NSDate) {
-        self.label.stringValue = "\(AppDelegate.shortDateForDate(date))"
+    func updateDateLabel(date: Date) {
+        self.label.stringValue = "\(AppDelegate.shortDateForDate(date: date))"
     }
     
     // MARK: - NMDatePicker delegate
 
-    func nmDatePicker(datePicker: NMDatePicker, selectedDate: NSDate) {
-        updateDateLabel(selectedDate)
+    func nmDatePicker(_ datePicker: NMDatePicker, selectedDate: Date) {
+        updateDateLabel(date: selectedDate)
     }
 
 

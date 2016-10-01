@@ -9,35 +9,35 @@ import Cocoa
 
 
 /// Custom view presenting single day in `NMDatePickerView`.
-public class NMDatePickerDayView: NSView {
+open class NMDatePickerDayView: NSView {
     
     // MARK: - Public properties
-    public let dateComponents: NSDateComponents
-    public var backgroundColor: NSColor?
-    public var borderColor: NSColor?
-    public var selected: Bool?
-    public var highlighted: Bool?
-    public var highlightedBackgroundColor: NSColor?
-    public var highlightedBorderColor: NSColor?
-    public var selectedBackgroundColor: NSColor?
-    public var selectedBorderColor: NSColor?
-    public var todayBackgroundColor: NSColor?
-    public var todayBorderColor: NSColor?
-    public var textColor: NSColor? {
+    open let dateComponents: DateComponents
+    open var backgroundColor: NSColor?
+    open var borderColor: NSColor?
+    open var selected: Bool?
+    open var highlighted: Bool?
+    open var highlightedBackgroundColor: NSColor?
+    open var highlightedBorderColor: NSColor?
+    open var selectedBackgroundColor: NSColor?
+    open var selectedBorderColor: NSColor?
+    open var todayBackgroundColor: NSColor?
+    open var todayBorderColor: NSColor?
+    open var textColor: NSColor? {
         didSet {
             self.label.textColor = textColor
         }
     }
-    public var selectedTextColor: NSColor?
-    public var highlightedTextColor: NSColor?
-    public var font: NSFont {
+    open var selectedTextColor: NSColor?
+    open var highlightedTextColor: NSColor?
+    open var font: NSFont {
         didSet {
             self.label.font = font
             self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
         }
     }
-    public var marked: Bool?
-    public var markColor: NSColor?
+    open var marked: Bool?
+    open var markColor: NSColor?
     
     // Callback actions
     var daySelectedAction: ((Void) -> (Void))?
@@ -45,30 +45,30 @@ public class NMDatePickerDayView: NSView {
     
     
     // MARK: - Private properties
-    private var trackingArea: NSTrackingArea?
-    private var label: NSTextField!
-    private var lineHeight: CGFloat
+    fileprivate var trackingArea: NSTrackingArea?
+    fileprivate var label: NSTextField!
+    fileprivate var lineHeight: CGFloat
     
     
     // MARK: - Initializers
     
-    public init(dateComponents: NSDateComponents) {
+    public init(dateComponents: DateComponents) {
         self.dateComponents = dateComponents
-        self.font = NSFont.systemFontOfSize(12.0)
+        self.font = NSFont.systemFont(ofSize: 12.0)
         self.lineHeight = NMDatePicker.lineHeightForFont(self.font)
         super.init(frame: NSZeroRect)
         
         
         // Get day component
-        let day = self.dateComponents.day
+        let day = self.dateComponents.day!
         
         // Configure label
         self.label = NSTextField(frame: NSZeroRect)
-        self.label.editable = false
-        self.label.backgroundColor = NSColor.clearColor()
-        self.label.bordered = false
-        self.label.alignment = NSTextAlignment.Center
-        self.label.textColor = NSColor.blackColor()
+        self.label.isEditable = false
+        self.label.backgroundColor = NSColor.clear
+        self.label.isBordered = false
+        self.label.alignment = NSTextAlignment.center
+        self.label.textColor = NSColor.black
         self.label.font = self.font
         self.label.stringValue = "\(day)"
         self.addSubview(self.label)
@@ -84,16 +84,16 @@ public class NMDatePickerDayView: NSView {
     
     // MARK: - Layout
     
-    override public func resizeSubviewsWithOldSize(oldSize: NSSize) {
+    override open func resizeSubviews(withOldSize oldSize: NSSize) {
         
-        let labelRect = CGRectMake(2.5, (self.bounds.size.height-self.lineHeight)/2+0.5, self.bounds.size.width-4, self.lineHeight)
-        self.label.frame = CGRectIntegral(labelRect)
+        let labelRect = CGRect(x: 2.5, y: (self.bounds.size.height-self.lineHeight)/2+0.5, width: self.bounds.size.width-4, height: self.lineHeight)
+        self.label.frame = labelRect.integral
         
     }
     
 
-    override public func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override open func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
 
         // Rectangular selection
 //        var frameRect = CGRectInset(dirtyRect, 1, 1)
@@ -105,8 +105,8 @@ public class NMDatePickerDayView: NSView {
         // Circle selection
         let width = self.bounds.height * 0.9
         let height = self.bounds.height * 0.9
-        let pathFrame = CGRectMake((self.bounds.width - width)/2.0, (self.bounds.height - height)/2.0, width, height);
-        let path = NSBezierPath(ovalInRect: pathFrame)
+        let pathFrame = CGRect(x: (self.bounds.width - width)/2.0, y: (self.bounds.height - height)/2.0, width: width, height: height);
+        let path = NSBezierPath(ovalIn: pathFrame)
         
         if self.selected == true {
             if let color = self.selectedBackgroundColor {
@@ -139,8 +139,8 @@ public class NMDatePickerDayView: NSView {
         
         
         if self.marked == true {
-            let markerFrame = CGRectMake((self.bounds.width - 4.0)/2.0, CGRectGetMinY(self.label.frame) - 4.0, 4.0, 4.0);
-            let path = NSBezierPath(ovalInRect: markerFrame)
+            let markerFrame = CGRect(x: (self.bounds.width - 4.0)/2.0, y: self.label.frame.minY - 5.0, width: 4.0, height: 4.0);
+            let path = NSBezierPath(ovalIn: markerFrame)
             if let color = self.markColor {
                 color.setFill()
                 path.fill()
@@ -150,7 +150,7 @@ public class NMDatePickerDayView: NSView {
         
     }
     
-    public func setSelected(state: Bool) {
+    open func setSelected(_ state: Bool) {
         self.selected = state
         if state == true {
             if let color = self.selectedTextColor {
@@ -163,39 +163,39 @@ public class NMDatePickerDayView: NSView {
             }
         }
         
-        self.setNeedsDisplayInRect(self.bounds)
+        self.setNeedsDisplay(self.bounds)
     }
     
-    public func setHighlighted(state: Bool) {
+    open func setHighlighted(_ state: Bool) {
         self.highlighted = state
-        self.setNeedsDisplayInRect(self.bounds)
+        self.setNeedsDisplay(self.bounds)
     }
     
     // MARK: - Events handling
     
-    override public func mouseDown(theEvent: NSEvent) {
+    override open func mouseDown(with theEvent: NSEvent) {
         if let action = self.daySelectedAction {
             action()
         }
     }
     
-    override public func mouseEntered(theEvent: NSEvent) {
+    override open func mouseEntered(with theEvent: NSEvent) {
         if let action = self.dayHighlightedAction {
             action(true)
         }
     }
     
-    override public func mouseExited(theEvent: NSEvent) {
+    override open func mouseExited(with theEvent: NSEvent) {
         if let action = self.dayHighlightedAction {
             action(false)
         }
     }
     
-    override public func updateTrackingAreas() {
+    override open func updateTrackingAreas() {
         if self.trackingArea != nil {
             self.removeTrackingArea(self.trackingArea!)
         }
-        let opts: NSTrackingAreaOptions = [NSTrackingAreaOptions.MouseEnteredAndExited, NSTrackingAreaOptions.ActiveAlways]
+        let opts: NSTrackingAreaOptions = [NSTrackingAreaOptions.mouseEnteredAndExited, NSTrackingAreaOptions.activeAlways]
         self.trackingArea = NSTrackingArea(rect: self.bounds, options: opts, owner: self, userInfo: nil)
         self.addTrackingArea(self.trackingArea!)
         
