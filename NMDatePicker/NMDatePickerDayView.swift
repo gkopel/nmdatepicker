@@ -40,7 +40,7 @@ open class NMDatePickerDayView: NSView {
     open var markColor: NSColor?
     
     // Callback actions
-    var daySelectedAction: ((Void) -> (Void))?
+    var daySelectedAction: (() -> (Void))?
     var dayHighlightedAction: ((Bool) -> (Void))?
     
     
@@ -195,7 +195,7 @@ open class NMDatePickerDayView: NSView {
         if self.trackingArea != nil {
             self.removeTrackingArea(self.trackingArea!)
         }
-        let opts: NSTrackingAreaOptions = [NSTrackingAreaOptions.mouseEnteredAndExited, NSTrackingAreaOptions.activeAlways]
+        let opts: NSTrackingArea.Options = [NSTrackingArea.Options.mouseEnteredAndExited, NSTrackingArea.Options.activeAlways]
         self.trackingArea = NSTrackingArea(rect: self.bounds, options: opts, owner: self, userInfo: nil)
         self.addTrackingArea(self.trackingArea!)
         

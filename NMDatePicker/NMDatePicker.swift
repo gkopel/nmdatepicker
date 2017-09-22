@@ -21,7 +21,7 @@ open class NMDatePicker: NSView {
     
     
     // MARK: - Initializers
-    public init(frame: NSRect, dateValue: Date) {
+    @objc public init(frame: NSRect, dateValue: Date) {
         self.dateValue = dateValue
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
@@ -35,7 +35,7 @@ open class NMDatePicker: NSView {
         configurePicker()
     }
     
-    public required init?(coder: NSCoder) {
+    @objc public required init?(coder: NSCoder) {
         self.dateValue = Date()
         self.currentMonthLabel = NSTextField(frame: NSZeroRect)
         self.monthBackButton = NSButton(frame: NSZeroRect)
@@ -60,93 +60,93 @@ open class NMDatePicker: NSView {
     }
     
     // MARK: - Public properties
-    open var delegate: NMDatePickerDelegate?
-    open var dateValue: Date
+    @objc open var delegate: NMDatePickerDelegate?
+    @objc open var dateValue: Date
     open let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
-    open var backgroundColor: NSColor? {
+    @objc open var backgroundColor: NSColor? {
         didSet {
             self.setNeedsDisplay(self.bounds)
         }
     }
-    open var titleFont: NSFont {
+    @objc open var titleFont: NSFont {
         didSet {
             configureViewAppearance()
         }
     }
-    open var font: NSFont {
+    @objc open var font: NSFont {
         didSet {
             self.lineHeight = NMDatePicker.lineHeightForFont(font)
             configureViewAppearance()
         }
     }
-    open var textColor: NSColor? {
+    @objc open var textColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var todayTextColor: NSColor? {
+    @objc open var todayTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var selectedTextColor: NSColor? {
+    @objc open var selectedTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var selectedBackgroundColor: NSColor? {
+    @objc open var selectedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var selectedBorderColor: NSColor? {
+    @objc open var selectedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var highlightedBackgroundColor: NSColor? {
+    @objc open var highlightedBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var highlightedBorderColor: NSColor? {
+    @objc open var highlightedBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var todayBackgroundColor: NSColor? {
+    @objc open var todayBackgroundColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var todayBorderColor: NSColor? {
+    @objc open var todayBorderColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var nextMonthTextColor: NSColor? {
+    @objc open var nextMonthTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var previousMonthTextColor: NSColor? {
+    @objc open var previousMonthTextColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
-    open var markColor: NSColor? {
-        didSet {
-            updateDaysView()
-        }
-    }
-    
-    open var todayMarkColor: NSColor? {
+    @objc open var markColor: NSColor? {
         didSet {
             updateDaysView()
         }
     }
     
-    open var selectedMarkColor: NSColor? {
+    @objc open var todayMarkColor: NSColor? {
+        didSet {
+            updateDaysView()
+        }
+    }
+    
+    @objc open var selectedMarkColor: NSColor? {
         didSet {
             updateDaysView()
         }
@@ -203,25 +203,25 @@ open class NMDatePicker: NSView {
         super.draw(dirtyRect)
         if let color = self.backgroundColor {
             color.setFill()
-            NSRectFill(dirtyRect)
+            dirtyRect.fill()
         }
         
     }
     
-    open func monthForwardAction(_ sender: NSButton?) {
+    @objc open func monthForwardAction(_ sender: NSButton?) {
         self.firstDayComponents = oneMonthLaterDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
         
     }
     
-    open func monthBackAction(_ sender: NSButton?) {
+    @objc open func monthBackAction(_ sender: NSButton?) {
         self.firstDayComponents = oneMonthEarlierDayForDay(self.firstDayComponents)
         updateCurrentMonthLabel()
         updateDaysView()
     }
     
-    open func displayViewForDate(_ date: Date) {
+    @objc open func displayViewForDate(_ date: Date) {
         self.firstDayComponents = firstDayOfMonthForDate(date)
         self.dateValue = date
         updateCurrentMonthLabel()
@@ -302,7 +302,7 @@ open class NMDatePicker: NSView {
         self.monthBackButton.title = "<"
         self.monthBackButton.alignment = NSTextAlignment.center
         let backBtnCell = self.monthBackButton.cell as! NSButtonCell
-        backBtnCell.bezelStyle = NSBezelStyle.circular
+        backBtnCell.bezelStyle = NSButton.BezelStyle.circular
         self.monthBackButton.target = self
         self.monthBackButton.action = #selector(NMDatePicker.monthBackAction(_:))
         self.addSubview(self.monthBackButton)
@@ -310,7 +310,7 @@ open class NMDatePicker: NSView {
         self.monthForwardButton.title = ">"
         self.monthForwardButton.alignment = NSTextAlignment.center
         let forwardBtnCell = self.monthForwardButton.cell as! NSButtonCell
-        forwardBtnCell.bezelStyle = NSBezelStyle.circular
+        forwardBtnCell.bezelStyle = NSButton.BezelStyle.circular
         self.monthForwardButton.target = self
         self.monthForwardButton.action = #selector(NMDatePicker.monthForwardAction(_:))
         self.addSubview(self.monthForwardButton)
@@ -542,8 +542,8 @@ open class NMDatePicker: NSView {
     }
     
     open class func lineHeightForFont(_ font: NSFont) -> CGFloat {
-        let attribs = NSDictionary(object: font, forKey: NSFontAttributeName as NSCopying)
-        let size = "Aa".size(withAttributes: attribs as? [String : AnyObject])
+        let attribs = NSDictionary(object: font, forKey: NSAttributedStringKey.font as NSCopying)
+        let size = "Aa".size(withAttributes: attribs as? [NSAttributedStringKey: Any])
         return round(size.height)
     }
     

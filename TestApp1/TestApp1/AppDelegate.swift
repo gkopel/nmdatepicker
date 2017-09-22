@@ -25,7 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NMDatePickerDelegate {
         let datePicker = NMDatePicker(frame: frame, dateValue: date)
         self.datePicker = datePicker
         datePicker.delegate = self
-        datePicker.autoresizingMask = NSAutoresizingMaskOptions.viewMinYMargin
+        datePicker.autoresizingMask = NSView.AutoresizingMask.minYMargin
         
         // Background color, font size
         datePicker.backgroundColor = NSColor.white
