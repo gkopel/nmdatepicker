@@ -20,7 +20,7 @@ NSDatePicker replacement allowing for appearance customisation.
 
 ## Requirements
 - OS X 10.11 or later
-- Swift 3.0 or later
+- Swift 4.0 or later
 
 ## Delegate Methods
 ```swift
