@@ -60,7 +60,7 @@ open class NMDatePicker: NSView {
     }
     
     // MARK: - Public properties
-    @objc open var delegate: NMDatePickerDelegate?
+    @objc weak open var delegate: NMDatePickerDelegate?
     @objc open var dateValue: Date
     open let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
     @objc open var backgroundColor: NSColor? {
