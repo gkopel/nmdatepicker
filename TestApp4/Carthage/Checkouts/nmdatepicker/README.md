@@ -45,7 +45,7 @@ NMDate Picker can be used from both Swift and Objective-C code. See demo apps:
 - TestApp1: example Swift application containing NMDatePicker view created in code.
 - TestApp2: example Swift application containing NMDatePicker view created in Interface Builder.
 - TestApp3: example Objective-C application containing NMDatePicker view created in code.
-- TestApp4: NMDatePicker used as a framework via Carthage dependency manager.
+- TestApp4: example Objective-C application containing NMDatePicker view created in Interface Builder.
 
 
 ## License
