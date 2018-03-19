@@ -16,8 +16,8 @@ NSDatePicker replacement allowing for appearance customisation.
 - can be created in code or in Interface Builder
 
 ## Installation
-- Add NMDatePicker.swift and NMDatePickerDayView.swift to your project.
-or
+There are two alternative ways to install NMDatePicker:
+- Add NMDatePicker.swift and NMDatePickerDayView.swift to your project,
 - Add NMDatePicker framework using Carthage dependency manager.
 
 ## Requirements
