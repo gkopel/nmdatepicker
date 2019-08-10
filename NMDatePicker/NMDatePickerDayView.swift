@@ -12,7 +12,7 @@ import Cocoa
 open class NMDatePickerDayView: NSView {
     
     // MARK: - Public properties
-    open let dateComponents: DateComponents
+    public let dateComponents: DateComponents
     open var backgroundColor: NSColor?
     open var borderColor: NSColor?
     open var selected: Bool?

@@ -62,7 +62,7 @@ open class NMDatePicker: NSView {
     // MARK: - Public properties
     @objc weak open var delegate: NMDatePickerDelegate?
     @objc open var dateValue: Date
-    open let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
+    public let firstDayOfWeek = 2 // '1' - Sunday, '2' - Monday
     @objc open var backgroundColor: NSColor? {
         didSet {
             self.setNeedsDisplay(self.bounds)
@@ -161,7 +161,7 @@ open class NMDatePicker: NSView {
     }
     
     open func unmarkDate(_ date: Date) {
-        if let index = self.markedDates.index(of: date) {
+        if let index = self.markedDates.firstIndex(of: date) {
             self.markedDates.remove(at: index)
             updateDaysView()
         }
@@ -542,8 +542,8 @@ open class NMDatePicker: NSView {
     }
     
     open class func lineHeightForFont(_ font: NSFont) -> CGFloat {
-        let attribs = NSDictionary(object: font, forKey: NSAttributedStringKey.font as NSCopying)
-        let size = "Aa".size(withAttributes: attribs as? [NSAttributedStringKey: Any])
+        let attribs = NSDictionary(object: font, forKey: NSAttributedString.Key.font as NSCopying)
+        let size = "Aa".size(withAttributes: attribs as? [NSAttributedString.Key: Any])
         return round(size.height)
     }
     
