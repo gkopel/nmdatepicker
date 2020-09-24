@@ -8,16 +8,15 @@ NSDatePicker replacement allowing for appearance customisation.
 ![NMDatePicker preview](https://netmedia.dev/images/nmdatepicker/nmdatepicker.png)
 
 ## Features
-- custom date picker size,
-- custom font size and colour,
-- custom colours for date picker background, selected day, highlighted day.
-- particular days can be marked with a bullet symbol.
+- custom date picker size
+- custom font size and colour
+- custom colours for date picker background, selected day, highlighted day
+- particular days can be marked with a bullet symbol
 - can be created in code or in Interface Builder
 
 ## Installation
-There are two alternative ways to install NMDatePicker:
-- Add NMDatePicker.swift and NMDatePickerDayView.swift to your project,
-- Add NMDatePicker framework using Carthage dependency manager.
+- Add NMDatePicker.swift and NMDatePickerDayView.swift to your project
+- Set NMDatePicker object as a delegate and implement delegate methods
 
 ## Requirements
 - OS X 10.11 or later
